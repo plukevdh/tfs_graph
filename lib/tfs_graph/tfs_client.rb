@@ -25,5 +25,9 @@ module TFSGraph
         TFS.client
       end
     end
+
+    def tfs=(client)
+      @tfs = client
+    end
   end
 end
