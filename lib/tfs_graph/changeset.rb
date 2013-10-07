@@ -13,7 +13,9 @@ module TFSGraph
       created: {key: "CreationDate", type: DateTime},
       id: {key: "Id", type: Integer},
       branch: {type: String, default: nil},
-      tags: {type: Array, default: []}
+      tags: {type: Array, default: []},
+      parent: {type: Integer, default: nil},
+      merge_parent: {type: Integer, default: nil}
     }
 
     act_as_entity
@@ -22,5 +24,10 @@ module TFSGraph
       id <=> other.id
     end
 
+    def next
+      child = outgoing(:child).options(model: self.class).nodes.to_a.first
+      raise StopIteration unless child
+      child
+    end
   end
 end
