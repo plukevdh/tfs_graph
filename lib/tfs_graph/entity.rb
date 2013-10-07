@@ -1,7 +1,5 @@
 module TFSGraph
 	class Entity < Related::Node
-		RECLASS = -> (attrs) { self.class }
-
 		def self.inherited(klass)
 			define_singleton_method :act_as_entity do
 				klass::SCHEMA.each do |key, details|

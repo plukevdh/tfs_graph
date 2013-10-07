@@ -1,6 +1,6 @@
 require 'tfs_graph/tfs_client'
 require 'tfs_graph/branch_normalizer'
-# Wraps domain knowledge of branch TFS access
+require 'tfs_graph/branch'
 
 module TFSGraph
   class BranchStore
@@ -11,8 +11,9 @@ module TFSGraph
         query = tfs.projects(project).branches.limit(150)
 
         branches = add_filters(query, Branch::ARCHIVED_FLAGS).run
+        normalized = BranchNormalizer.normalize_many branches
 
-        BranchNormalizer.normalize_many branches
+        normalized.map {|branch_attrs| Branch.create branch_attrs }
       end
 
       private

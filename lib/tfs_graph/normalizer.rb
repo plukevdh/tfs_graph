@@ -9,11 +9,11 @@ module TFSGraph
         representation = {}
         schema.each do |key, lookup|
 
-          if lookup.is_a? Hash  # for keys that pull data from other sources
+          if lookup[:key].present?  # for keys that pull data from other sources
             value = item.send lookup[:key]
             value = lookup[:converter].call(value) if lookup[:converter].present?
           else
-            value = lookup
+            value = lookup[:default]
           end
 
           representation[key] = value
