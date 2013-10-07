@@ -7,8 +7,8 @@ module TFSGraph
 
     REQUIRED_KEYS = [:endpoint, :username, :password]
 
-    # Requires a has
-    def setup(settings)
+    # Requires a hash of settings
+    def setup(settings=TFSGraph.config.tfs)
       raise InvalidConfig unless REQUIRED_KEYS.all? {|key| settings.keys.include? key }
 
       TFS.configure do |c|
