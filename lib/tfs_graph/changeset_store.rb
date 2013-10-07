@@ -14,7 +14,7 @@ module TFSGraph
 	      normalized = ChangesetNormalizer.normalize_many changesets, branch.name
 	      normalized.map do |attrs|
 	      	begin
-	      		Changeset.create attrs.dup
+	      		Changeset.create attrs
 	      	rescue Related::ValidationsFailed => ex
 	      		puts ex.message
 	      		next

@@ -37,12 +37,11 @@ module TFSGraph
     end
 
     def changesets
-      @changesets ||= ChangesetRepository.by_branch self
+      @changesets ||= outgoing(:changesets).options(model: Changeset).nodes.to_a
     end
 
-    def cache_merges
-      return if ChangesetMergeCache.cached? self
-      ChangesetMergeCache.cache self
+    def root_changeset
+      @root ||= outgoing(:child).options(model: Changeset).nodes.to_a.first
     end
 
     def <=>(other)
