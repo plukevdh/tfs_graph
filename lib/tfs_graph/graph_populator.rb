@@ -20,7 +20,7 @@ module TFSGraph
           changesets = ChangesetStore.fetch(branch)
           ChangesetTreeCreator.to_tree changesets, branch
           changesets
-        end.flatten
+        end
 
         branches.each do |branch|
           merges = ChangesetMergeStore.fetch(branch)

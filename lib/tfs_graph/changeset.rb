@@ -31,7 +31,26 @@ module TFSGraph
     end
 
     def merges
-      outgoing(:merges).options(model: self.class).nodes.to_a
+      get_merges_for outgoing(:merges)
+    end
+
+    def merged
+      get_merges_for incoming(:merges)
+    end
+
+    def set_merging_to
+      into = merged.max
+      self.merge_parent = into.id if into
+    end
+
+    def set_merging_from
+      from = merges.max
+      self.merge_parent = from.id if from
+    end
+
+    private
+    def get_merges_for(merge)
+      merge.options(model: self.class).nodes.to_a
     end
   end
 end
