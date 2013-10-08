@@ -25,7 +25,7 @@ module TFSGraph
     end
 
     def is_root?
-      !root
+      root.empty?
     end
 
     def is_branch?

@@ -29,5 +29,9 @@ module TFSGraph
       raise StopIteration unless child
       child
     end
+
+    def merges
+      outgoing(:merges).options(model: self.class).nodes.to_a
+    end
   end
 end
