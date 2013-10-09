@@ -4,7 +4,7 @@ module TFSGraph
       def associate(changesets)
         changesets.each do |group|
           change = group.first
-          root = change.merges.min
+          root = change.merges.max
 
           next if root.nil?
 
