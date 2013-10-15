@@ -21,6 +21,10 @@ module TFSGraph
     ARCHIVED_FLAGS = ["Archive"]
     RELEASE_MATCHER = /^(\w+)-r-(\d+)$/i
 
+    def archived?
+      !!@archived
+    end
+
     def is_root?
       root.empty?
     end
