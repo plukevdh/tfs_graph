@@ -7,22 +7,19 @@ module TFSGraph
     extend Comparable
 
     SCHEMA = {
-      path: {key: "Path", type: String},
+      path: {key: "Path", converter: -> (path) { repath_archive(path) }, type: String},
       project: {converter: -> (path) { branch_project(path) }, key: "Path", type: String},
       name: {converter: -> (path) { branch_path_to_name(path) }, key: "Path", type: String},
       absolute_root: {converter: -> (path) { branch_base(path) if path }, key: "Path", type: String},
       root: {converter: -> (path) { server_path_to_name(path) if path }, key: "ParentBranch", type: String},
       created: {key: "DateCreated", type: DateTime}
+      archived: {default: false, type: Boolean}
     }
 
     act_as_entity
 
     ARCHIVED_FLAGS = ["Archive"]
     RELEASE_MATCHER = /^(\w+)-r-(\d+)$/i
-
-    def archived?
-      ARCHIVED_FLAGS.any? {|flag| path.include? flag }
-    end
 
     def is_root?
       root.empty?
@@ -46,6 +43,18 @@ module TFSGraph
 
     def <=>(other)
       path <=> other.path
+    end
+
+    private
+    def self.repath_archive(path)
+      return path unless ARCHIVED_FLAGS.any? {|flag| path.include? flag }
+
+      #update the archived field
+      archived = true
+      save
+
+      ARCHIVED_FLAGS.each {|flag| path.gsub!(/#{flag}>?(?:.*)>/, "") }
+      path
     end
   end
 end
