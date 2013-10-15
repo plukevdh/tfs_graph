@@ -12,8 +12,8 @@ module TFSGraph
       name: {converter: -> (path) { branch_path_to_name(path) }, key: "Path", type: String},
       absolute_root: {converter: -> (path) { branch_base(path) if path }, key: "Path", type: String},
       root: {converter: -> (path) { server_path_to_name(path) if path }, key: "ParentBranch", type: String},
-      created: {key: "DateCreated", type: DateTime}
-      archived: {default: false, type: Boolean}
+      created: {key: "DateCreated", type: DateTime},
+      archived: {default: false, type: String}
     }
 
     act_as_entity
