@@ -8,7 +8,7 @@ module TFSGraph
 
 		class << self
 			def to_tree(branches)
-				grouped = branches.group_by &:root
+				grouped = branches.group_by &:absolute_root
 
 				roots = grouped[ROOT_GROUP]
 				roots.each do |branch|
