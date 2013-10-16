@@ -10,7 +10,7 @@ module TFSGraph
 			def to_tree(branches)
 				grouped = branches.group_by &:absolute_root
 
-				roots = grouped[ROOT_GROUP]
+				roots = grouped.map {|k,x| x.detect {|b| b.path == "$>RJR>#{k}"}}.flatten.compact
 				roots.each do |branch|
 					Related::Relationship.create(:roots, Related.root, branch)
 					children = grouped[branch.name]
