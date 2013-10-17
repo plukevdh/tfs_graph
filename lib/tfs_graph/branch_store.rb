@@ -7,21 +7,15 @@ module TFSGraph
     extend TFSClient
 
     class << self
-      def fetch(project)
-        query = tfs.projects(project).branches.limit(150)
-
-        branches = query.run # add_filters(query, Branch::ARCHIVED_FLAGS).run
+      def cache(project)
+        branches = tfs.projects(project.name).branches.limit(150).run
         normalized = BranchNormalizer.normalize_many branches
 
-        normalized.map {|branch_attrs| Branch.create branch_attrs }
-      end
-
-      private
-      def add_filters(query, flags)
-        flags.each do |flag|
-          query.where("substringof('#{flag}',Path) eq false")
+        normalized.map do |branch_attrs|
+          branch = Branch.create branch_attrs
+          Related::Relationship.create(:branches, project, branch)
+          branch
         end
-        query
       end
     end
   end
