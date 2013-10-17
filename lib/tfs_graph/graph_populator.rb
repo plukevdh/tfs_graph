@@ -4,7 +4,6 @@ require 'tfs_graph/branch_store'
 require 'tfs_graph/changeset_store'
 require 'tfs_graph/changeset_merge_store'
 
-require 'tfs_graph/branch_tree_creator'
 require 'tfs_graph/changeset_tree_creator'
 require 'tfs_graph/branch_associator'
 
