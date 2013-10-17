@@ -11,7 +11,7 @@ module TFSGraph
 	    def fetch(branch)
 	      changesets = tfs.branches(branch.path).changesets.order_by("Id asc").limit(10000).run
 
-	      normalized = ChangesetNormalizer.normalize_many changesets, branch.name
+	      normalized = ChangesetNormalizer.normalize_many changesets, branch.path
 	      normalized.map do |attrs|
 	      	begin
 	      		Changeset.create attrs
