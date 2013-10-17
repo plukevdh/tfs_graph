@@ -10,8 +10,8 @@ module TFSGraph
     end
 
     # handles TFS server paths: $/RJR/Project/Path
-    def server_path_to_name(path)
-      server_path_parts(path).last
+    def server_path_to_odata_path(path)
+      path.gsub "/", ">"
     end
 
     def branch_project(path)
