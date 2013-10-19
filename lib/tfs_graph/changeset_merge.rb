@@ -18,7 +18,11 @@ module TFSGraph
       begin
         merge = new(attrs)
 
-        Related::Relationship.create :merges, *merge.get_relations
+        target, source = merge.get_relations
+        Related::Relationship.create :merges, target, source
+
+        # relate the branches as well
+        Related::Relationship.create :related, source.branch, target.branch
       rescue Related::NotFound => ex
         puts "Could not find a changeset to merge with: #{ex.message}"
       rescue Related::ValidationsFailed => ex

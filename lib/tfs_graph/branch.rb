@@ -70,6 +70,11 @@ module TFSGraph
       !root?
     end
 
+    # branches this one touches or is touched
+    def related_branches
+      incoming(:related).options(model: Branch).nodes.to_a
+    end
+
     def changesets
       @changesets ||= outgoing(:changesets).options(model: Changeset).nodes.to_a
     end

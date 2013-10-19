@@ -30,6 +30,10 @@ module TFSGraph
       child
     end
 
+    def branch
+      incoming(:changesets).options(model: Branch).nodes.to_a.first
+    end
+
     def merges
       get_merges_for outgoing(:merges)
     end
