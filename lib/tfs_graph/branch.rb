@@ -72,7 +72,7 @@ module TFSGraph
 
     # branches this one touches or is touched
     def related_branches
-      incoming(:related).options(model: Branch).nodes.to_a
+      incoming(:related).options(model: Branch).nodes.to_a.map &:id
     end
 
     def changesets
@@ -85,6 +85,11 @@ module TFSGraph
 
     def <=>(other)
       path <=> other.path
+    end
+
+    def to_json(options={})
+      options.merge! methods: :related_branches
+      super
     end
 
     private

@@ -8,16 +8,6 @@ module TFSGraph
 			end
 		end
 
-		def to_hash
-			hash = {}
-			schema.keys.each {|key| hash[key] = send key }
-			hash
-		end
-
-		def to_json
-			to_hash.to_json
-		end
-
 		private
 		def schema
 			self.class::SCHEMA
