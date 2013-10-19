@@ -18,9 +18,9 @@ module TFSGraph
     }
 
     BRANCH_TYPES = [
-      :feature,
       :root,
-      :release
+      :release,
+      :feature
     ]
 
     ARCHIVED_FLAGS = ["Archive"]
