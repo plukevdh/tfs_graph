@@ -12,7 +12,7 @@ module TFSGraph
       committer: {key: "Committer", converter: -> (name) { base_username(name) }, type: String},
       created: {key: "CreationDate", type: DateTime},
       id: {key: "Id", type: Integer},
-      branch: {type: String, default: nil},
+      branch_path: {type: String, default: nil},
       tags: {type: Array, default: []},
       parent: {type: Integer, default: nil},
       merge_parent: {type: Integer, default: nil}

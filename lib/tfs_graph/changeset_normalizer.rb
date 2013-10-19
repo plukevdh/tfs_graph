@@ -9,7 +9,7 @@ module TFSGraph
 
       def normalize(item, branch)
         item = super(item)
-        item[:branch] = branch
+        item[:branch_path] = branch
         item
       end
 
