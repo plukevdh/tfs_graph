@@ -3,6 +3,8 @@ module TFSGraph
     class << self
       def associate(changesets)
         changesets.each do |group|
+          next if group.empty?
+
           change = group.first
           root = change.merges.max
 

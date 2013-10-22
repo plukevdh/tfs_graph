@@ -12,6 +12,8 @@ BranchNotFound = Class.new(Exception)
 module TFSGraph
   class GraphPopulator
     class << self
+      include StoreHelpers
+
       def populate_all
         projects = ProjectStore.cache
         projects.map {|p| populate_for_project(p) }
@@ -19,12 +21,7 @@ module TFSGraph
 
       def populate_for_project(project)
         branches = BranchStore.new(project).cache
-
-        changesets = branches.map do |branch|
-          changesets = ChangesetStore.new(branch).cache
-          ChangesetTreeCreator.to_tree changesets, branch
-          changesets
-        end
+        changesets = branches.map {|branch| cache_changesets branch }
 
         # can't associate merges until changesets are cached
         branches.each do |branch|
@@ -32,7 +29,19 @@ module TFSGraph
         end
 
         BranchAssociator.associate(changesets)
+        mark_as_updated
+        changesets
       end
+    end
+      end
+    end
+
+
+    private
+    def cache_changesets(branch, using=:cache)
+      changesets = ChangesetStore.new(branch).call using
+      ChangesetTreeCreator.to_tree branch
+      changesets
     end
   end
 end

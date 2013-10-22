@@ -33,7 +33,7 @@ module TFSGraph
 
     def persist(changesets)
       normalized = ChangesetNormalizer.normalize_many changesets, @branch.path
-      saved = normalized.map do |attrs|
+      normalized.map do |attrs|
       	begin
       		changeset = Changeset.create attrs
 					Related::Relationship.create :changesets, @branch, changeset
@@ -43,10 +43,6 @@ module TFSGraph
       		next
       	end
       end.compact
-
-      mark_as_updated
-
-      saved
     end
 	end
 end

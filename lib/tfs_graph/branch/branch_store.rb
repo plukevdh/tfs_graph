@@ -33,15 +33,11 @@ module TFSGraph
     def persist(branches)
       normalized = BranchNormalizer.normalize_many branches
 
-      saved = normalized.map do |branch_attrs|
+      normalized.map do |branch_attrs|
         branch = Branch.create branch_attrs
         Related::Relationship.create(:branches, @project, branch)
         branch
       end
-
-      mark_as_updated
-
-      saved
     end
   end
 end
