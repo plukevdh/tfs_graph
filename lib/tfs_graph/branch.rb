@@ -76,7 +76,7 @@ module TFSGraph
     end
 
     def changesets
-      @changesets ||= outgoing(:changesets).options(model: Changeset).nodes.to_a
+      outgoing(:changesets).options(model: Changeset).nodes.to_a
     end
 
     def root_changeset
