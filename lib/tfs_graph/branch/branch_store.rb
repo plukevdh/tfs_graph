@@ -15,14 +15,20 @@ module TFSGraph
       @project = project
     end
 
-    def cache
-      branches = root_query.run
-      persist(branches)
+    def cache_all
+      persist(all)
     end
 
     def cache_since_last_update
-      branches = root_query.where("DateCreated gt DateTime'#{last_updated_on.iso8601}'").run
-      persist(branches)
+      persist since_last_update
+    end
+
+    def all
+      normalize root_query.run
+    end
+
+    def since_last_update
+      normalize root_query.where("DateCreated gt DateTime'#{last_updated_on.iso8601}'").run
     end
 
     private
@@ -30,10 +36,12 @@ module TFSGraph
       tfs.projects(@project.name).branches.limit(LIMIT)
     end
 
-    def persist(branches)
-      normalized = BranchNormalizer.normalize_many branches
+    def normalize(branches)
+      BranchNormalizer.normalize_many branches
+    end
 
-      normalized.map do |branch_attrs|
+    def persist(branches)
+      branches.map do |branch_attrs|
         branch = Branch.create branch_attrs
         Related::Relationship.create(:branches, @project, branch)
         branch

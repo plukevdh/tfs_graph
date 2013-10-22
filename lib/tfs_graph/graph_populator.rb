@@ -20,12 +20,12 @@ module TFSGraph
       end
 
       def populate_for_project(project)
-        branches = BranchStore.new(project).cache
+        branches = BranchStore.new(project).cache_all
         changesets = branches.map {|branch| cache_changesets branch }
 
         # can't associate merges until changesets are cached
         branches.each do |branch|
-          ChangesetMergeStore.new(branch).cache
+          ChangesetMergeStore.new(branch).cache_all
         end
 
         BranchAssociator.associate(changesets)
@@ -52,7 +52,7 @@ module TFSGraph
       end
 
       private
-      def cache_changesets(branch, using=:cache)
+      def cache_changesets(branch, using=:cache_all)
         changesets = ChangesetStore.new(branch).send using
         ChangesetTreeCreator.to_tree branch
         changesets
