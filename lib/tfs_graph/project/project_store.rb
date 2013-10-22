@@ -1,5 +1,5 @@
 require 'tfs_graph/tfs_client'
-require 'tfs_graph/project_normalizer'
+require 'tfs_graph/project/project_normalizer'
 
 module TFSGraph
   class ProjectStore
