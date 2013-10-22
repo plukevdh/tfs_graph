@@ -32,32 +32,31 @@ module TFSGraph
         mark_as_updated
         changesets
       end
-    end
 
-    def incrementally_update_all
-      ProjectStore.all_cached.each do |project|
-        new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
-        new_branches = BranchStore.new(project).cache_since_last_update
+      def incrementally_update_all
+        ProjectStore.all_cached.each do |project|
+          new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
+          new_branches = BranchStore.new(project).cache_since_last_update
 
-        new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
+          new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
 
-        # recache all merges, should not lead to dupes thanks to Related
-        new_branches.concat(project.branches).each do |branch|
-          ChangesetMergeStore.new(branch).cache
+          # recache all merges, should not lead to dupes thanks to Related
+          new_branches.concat(project.branches).each do |branch|
+            ChangesetMergeStore.new(branch).cache
+          end
+
+          BranchAssociator.associate(new_changesets)
+          mark_as_updated
+          new_changesets
         end
-
-        BranchAssociator.associate(new_changesets)
-        mark_as_updated
-        new_changesets
       end
-    end
 
-
-    private
-    def cache_changesets(branch, using=:cache)
-      changesets = ChangesetStore.new(branch).call using
-      ChangesetTreeCreator.to_tree branch
-      changesets
+      private
+      def cache_changesets(branch, using=:cache)
+        changesets = ChangesetStore.new(branch).call using
+        ChangesetTreeCreator.to_tree branch
+        changesets
+      end
     end
   end
 end
