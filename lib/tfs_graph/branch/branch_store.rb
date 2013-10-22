@@ -21,7 +21,7 @@ module TFSGraph
     end
 
     def cache_since_last_update
-      branches = root_query.where("CreatedDate gt DateTime'#{last_updated_on.iso8601}'").run
+      branches = root_query.where("DateCreated gt DateTime'#{last_updated_on.iso8601}'").run
       persist(branches)
     end
 
