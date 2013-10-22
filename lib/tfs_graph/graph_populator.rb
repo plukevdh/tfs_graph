@@ -16,7 +16,10 @@ module TFSGraph
 
       def populate_all
         projects = ProjectStore.cache
-        projects.map {|p| populate_for_project(p) }
+        changesets = projects.map {|p| populate_for_project(p) }
+
+        mark_as_updated
+        changesets
       end
 
       def populate_for_project(project)
@@ -29,12 +32,11 @@ module TFSGraph
         end
 
         BranchAssociator.associate(changesets)
-        mark_as_updated
         changesets
       end
 
       def incrementally_update_all
-        ProjectStore.all_cached.each do |project|
+        changesets = ProjectStore.all_cached.map do |project|
           new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
           new_branches = BranchStore.new(project).cache_since_last_update
 
@@ -46,9 +48,11 @@ module TFSGraph
           end
 
           BranchAssociator.associate(new_changesets)
-          mark_as_updated
           new_changesets
         end
+
+        mark_as_updated
+        changesets
       end
 
       private
