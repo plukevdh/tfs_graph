@@ -59,7 +59,7 @@ module TFSGraph
       def cache_changesets(branch, using=:cache_all)
         changesets = ChangesetStore.new(branch).send using
         ChangesetTreeCreator.to_tree branch
-        changesets
+        changesets.compact
       end
     end
   end
