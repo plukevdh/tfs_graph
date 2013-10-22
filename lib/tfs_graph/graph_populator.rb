@@ -53,7 +53,7 @@ module TFSGraph
 
       private
       def cache_changesets(branch, using=:cache)
-        changesets = ChangesetStore.new(branch).call using
+        changesets = ChangesetStore.new(branch).send using
         ChangesetTreeCreator.to_tree branch
         changesets
       end
