@@ -8,10 +8,10 @@ module TFSGraph
 
     SCHEMA = {
       original_path: {key: "Path", type: String},
-      path: {key: "Path", converter: -> (path) { repath_archive(path) }, type: String},
-      project: {converter: -> (path) { branch_project(path) }, key: "Path", type: String},
-      name: {converter: -> (path) { branch_path_to_name(path) }, key: "Path", type: String},
-      root: {converter: -> (path) { repath_archive(server_path_to_odata_path(path)) if path }, key: "ParentBranch", type: String},
+      path: {key: "Path", converter: ->(path) { repath_archive(path) }, type: String},
+      project: {converter: ->(path) { branch_project(path) }, key: "Path", type: String},
+      name: {converter: ->(path) { branch_path_to_name(path) }, key: "Path", type: String},
+      root: {converter: ->(path) { repath_archive(server_path_to_odata_path(path)) if path }, key: "ParentBranch", type: String},
       created: {key: "DateCreated", type: DateTime},
       type: {default: "Feature", type: Integer},
       archived: {default: false, type: String}
