@@ -9,7 +9,7 @@ module TFSGraph
     end
 
     def last_updated_on
-      Time.parse Related.redis.get(UPDATED_KEY)
+      Time.parse(Related.redis.get(UPDATED_KEY)).localtime
     end
   end
 end
