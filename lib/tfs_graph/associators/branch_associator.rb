@@ -15,7 +15,7 @@ module TFSGraph
         change = changesets.first
         root = change.merges.max
 
-        next if root.nil?
+        return if root.nil?
 
         change.parent = root.id
         change.save
