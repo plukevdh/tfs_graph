@@ -31,7 +31,7 @@ module TFSGraph
           ChangesetMergeStore.new(branch).cache_all
         end
 
-        BranchAssociator.associate(changesets)
+        BranchAssociator.associate_groups(changesets)
         changesets
       end
 
@@ -42,12 +42,13 @@ module TFSGraph
 
           new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
 
-          # recache all merges, should not lead to dupes thanks to Related
+          # recache and reassociate all merges for all branches.
+          # should not lead to dupes thanks to Related
           new_branches.concat(project.branches).each do |branch|
             ChangesetMergeStore.new(branch).cache
+            BranchAssociator.associate(branch.changesets)
           end
 
-          BranchAssociator.associate(new_changesets)
           new_changesets
         end
 
