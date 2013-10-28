@@ -13,6 +13,10 @@ module TFSGraph
       name <=> other.name
     end
 
+    def last_change
+      branches.map {|b| b.last_changeset }
+    end
+
     def branches
       outgoing(:branches).options(model: Branch).nodes.to_a
     end

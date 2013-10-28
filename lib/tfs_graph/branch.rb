@@ -83,6 +83,10 @@ module TFSGraph
       @root ||= outgoing(:child).options(model: Changeset).nodes.to_a.first
     end
 
+    def last_changeset
+      changesets.last
+    end
+
     def <=>(other)
       path <=> other.path
     end
