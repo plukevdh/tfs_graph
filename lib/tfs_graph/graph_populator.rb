@@ -28,7 +28,7 @@ module TFSGraph
 
         # can't associate merges until changesets are cached
         branches.each do |branch|
-          ChangesetMergeStore.new(branch).cache_all
+          ChangesetMergeStore.new(branch).cache
         end
 
         BranchAssociator.associate_groups(changesets)
