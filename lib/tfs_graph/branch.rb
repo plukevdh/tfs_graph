@@ -18,7 +18,7 @@ module TFSGraph
     }
 
     BRANCH_TYPES = [
-      :root,
+      :master,
       :release,
       :feature
     ]
