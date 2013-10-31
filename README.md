@@ -51,14 +51,14 @@ There are plenty more relationships to traverse an each object type (Project/Bra
   - archived
 
 - Changeset
-  _ comment
-  _ committer
-  _ created
-  _ id
-  _ branch_path
-  _ tags
-  _ parent
-  _ merge_parent
+  - comment
+  - committer
+  - created
+  - id
+  - branch_path
+  - tags
+  - parent
+  - merge_parent
 
 Changesets are also enumerable. So you can do things like
 
