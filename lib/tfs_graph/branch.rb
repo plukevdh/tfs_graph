@@ -45,7 +45,7 @@ module TFSGraph
     end
 
     def rootless?
-      !root? && root.empty?
+      !master? && root.empty?
     end
 
     def type_index(name)
@@ -58,7 +58,7 @@ module TFSGraph
         item = self
         proj = ProjectStore.find_cached project
 
-        until(item.root?) do
+        until(item.master?) do
           item = proj.branches.detect {|branch| branch.path == item.root }
         end
 
@@ -67,7 +67,7 @@ module TFSGraph
     end
 
     def branch?
-      !root?
+      !master?
     end
 
     # branches this one touches or is touched
@@ -98,7 +98,7 @@ module TFSGraph
 
     private
     def detect_type
-      return self.type = type_index(:root) if (root.empty?)
+      return self.type = type_index(:master) if (root.empty?)
       return self.type = type_index(:release) if !(name =~ RELEASE_MATCHER).nil?
       self.type = type_index(:feature)
       nil

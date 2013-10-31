@@ -22,7 +22,7 @@ module TFSGraph
     end
 
     def roots
-      branches.select &:root?
+      branches.select &:master?
     end
   end
 end
