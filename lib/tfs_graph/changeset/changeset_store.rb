@@ -6,22 +6,22 @@ require 'tfs_graph/changeset'
 # Wraps domain knowledge of changeset TFS access
 
 module TFSGraph
-	class ChangesetStore
-	  include TFSClient
-	  include StoreHelpers
+  class ChangesetStore
+    include TFSClient
+    include StoreHelpers
 
-	  LIMIT = 10000
+    LIMIT = 10000
 
-	  def initialize(branch)
-	  	@branch = branch
-	  end
+    def initialize(branch)
+      @branch = branch
+    end
 
     def cache_all
       persist all
     end
 
     def cache_since_last_update
-    	persist since_last_update
+      persist since_last_update
     end
 
     def all
@@ -34,7 +34,7 @@ module TFSGraph
 
     private
     def root_query
-    	tfs.branches(@branch.path).changesets.limit(LIMIT)
+      tfs.branches(@branch.path).changesets.limit(LIMIT)
     end
 
     def normalize(changesets)
@@ -43,15 +43,14 @@ module TFSGraph
 
     def persist(changesets)
       changesets.map do |attrs|
-      	begin
-      		changeset = Changeset.create attrs
-					Related::Relationship.create :changesets, @branch, changeset
-					changeset
-      	rescue Related::ValidationsFailed => ex
-      		puts ex.message
-      		next
-      	end
+        begin
+          changeset = Changeset.create attrs
+          Related::Relationship.create :changesets, @branch, changeset
+          changeset
+        rescue Related::ValidationsFailed => ex
+          puts ex.message
+          next
+        end
       end.compact
     end
-	end
-end
+  end
