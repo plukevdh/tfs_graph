@@ -54,3 +54,4 @@ module TFSGraph
       end.compact
     end
   end
+end
