@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'tfs_helpers'
+require 'tfs_graph/helpers'
 
-class DemoClass; include TFSHelpers; end
+class DemoClass; include TFSGraph::Helpers; end
 
-describe TFSHelpers do
+describe TFSGraph::Helpers do
   Given(:demo) { DemoClass.new }
   Given(:archived_path) { "$>RJR>_Branches>FAQ>RJRLibraries-FAQ" }
   Given(:normal_path) { "$>RJR>Grizzly" }
