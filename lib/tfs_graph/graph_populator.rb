@@ -37,7 +37,15 @@ module TFSGraph
 
       def incrementally_update_all
         changesets = ProjectStore.all_cached.map do |project|
-          new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
+          incrementally_update_project(project)
+        end
+
+        mark_as_updated
+        changesets
+      end
+
+      def incrementally_update_project(project)
+        new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
           new_branches = BranchStore.new(project).cache_since_last_update
 
           new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
@@ -51,9 +59,6 @@ module TFSGraph
 
           new_changesets
         end
-
-        mark_as_updated
-        changesets
       end
 
       private
