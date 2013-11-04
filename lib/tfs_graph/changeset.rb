@@ -34,12 +34,12 @@ module TFSGraph
       incoming(:changesets).options(model: Branch).nodes.to_a.first
     end
 
-    def merges
-      get_merges_for outgoing(:merges)
-    end
-
     def formatted_created
       created.strftime("%m/%d/%Y")
+    end
+
+    def merges
+      get_merges_for outgoing(:merges)
     end
 
     def merged
