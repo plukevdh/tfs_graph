@@ -38,6 +38,10 @@ module TFSGraph
       get_merges_for outgoing(:merges)
     end
 
+    def formatted_created
+      created.strftime("%m/%d/%Y")
+    end
+
     def merged
       get_merges_for incoming(:merges)
     end

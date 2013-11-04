@@ -17,6 +17,14 @@ module TFSGraph
       branches.map {|b| b.last_changeset }
     end
 
+    def all_activity
+      branches.map {|b| b.changesets }.flatten
+    end
+
+    def all_activity_by_date
+      all_activity.group_by(&:formatted_created)
+    end
+
     def branches
       outgoing(:branches).options(model: Branch).nodes.to_a
     end
