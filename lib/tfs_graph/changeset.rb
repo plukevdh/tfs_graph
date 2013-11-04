@@ -1,10 +1,10 @@
 require 'tfs_graph/entity'
-require 'tfs_graph/helpers'
+require 'tfs_graph/tfs_helpers'
 
 # FIXME: DRY along side the Branch class
 module TFSGraph
   class Changeset < Entity
-    extend Helpers
+    extend TFSHelpers
     extend Comparable
 
     SCHEMA = {

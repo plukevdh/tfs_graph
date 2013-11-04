@@ -1,5 +1,5 @@
 module TFSGraph
-  module Helpers
+  module TFSHelpers
     def branch_base(path)
       branch_path_to_name(path).split('-').first
     end

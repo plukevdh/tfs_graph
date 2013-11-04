@@ -1,9 +1,9 @@
 require 'tfs_graph/entity'
-require 'tfs_graph/helpers'
+require 'tfs_graph/tfs_helpers'
 
 module TFSGraph
   class Branch < Entity
-    extend Helpers
+    extend TFSHelpers
     extend Comparable
 
     SCHEMA = {

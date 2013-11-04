@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'tfs_graph/helpers'
+require 'tfs_graph/tfs_helpers'
 
-class DemoClass; include TFSGraph::Helpers; end
+class DemoClass; include TFSGraph::TFSHelpers; end
 
 describe TFSGraph::Helpers do
   Given(:demo) { DemoClass.new }

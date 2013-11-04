@@ -1,5 +1,6 @@
 require 'tfs_graph/tfs_client'
-require 'tfs_graph/helpers'
+require 'tfs_graph/tfs_helpers'
+require 'tfs_graph/store_helpers'
 
 require 'tfs_graph/branch/branch_normalizer'
 require 'tfs_graph/branch'
@@ -7,7 +8,8 @@ require 'tfs_graph/branch'
 module TFSGraph
   class BranchStore
     include TFSClient
-    include Helpers
+    include TFSHelpers
+    include StoreHelpers
 
     LIMIT = 150
 
