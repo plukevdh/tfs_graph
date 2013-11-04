@@ -46,19 +46,18 @@ module TFSGraph
 
       def incrementally_update_project(project)
         new_changesets = project.branches.map {|branch| cache_changesets(branch, :cache_since_last_update) }
-          new_branches = BranchStore.new(project).cache_since_last_update
+        new_branches = BranchStore.new(project).cache_since_last_update
 
-          new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
+        new_changesets.concat new_branches.map {|branch| cache_changesets(branch) }
 
-          # recache and reassociate all merges for all branches.
-          # should not lead to dupes thanks to Related
-          new_branches.concat(project.branches).each do |branch|
-            ChangesetMergeStore.new(branch).cache
-            BranchAssociator.associate(branch.changesets)
-          end
-
-          new_changesets
+        # recache and reassociate all merges for all branches.
+        # should not lead to dupes thanks to Related
+        new_branches.concat(project.branches).each do |branch|
+          ChangesetMergeStore.new(branch).cache
+          BranchAssociator.associate(branch.changesets)
         end
+
+        new_changesets
       end
 
       private
