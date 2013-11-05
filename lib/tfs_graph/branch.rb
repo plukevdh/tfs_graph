@@ -87,6 +87,24 @@ module TFSGraph
       changesets.last
     end
 
+    def ahead_of_master
+      return 0 unless absolute_root
+      self.outgoing(:changesets)
+        .diff(absolute_root.outgoing(:included)
+          .intersect(self.outgoing(:changesets)))
+        .to_a.count
+    end
+
+    # gets the set of changesets that exist in both root and self
+    # then gets a diff of that set and the root.
+    def behind_master
+      return 0 unless absolute_root
+      absolute_root.outgoing(:changesets)
+        .diff(self.outgoing(:included)
+          .intersect(absolute_root.outgoing(:changesets)))
+        .to_a.count
+    end
+
     def <=>(other)
       path <=> other.path
     end
