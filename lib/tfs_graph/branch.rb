@@ -14,7 +14,8 @@ module TFSGraph
       root: {converter: ->(path) { repath_archive(server_path_to_odata_path(path)) if path }, key: "ParentBranch", type: String},
       created: {key: "DateCreated", type: DateTime},
       type: {default: "Feature", type: Integer},
-      archived: {default: false, type: String}
+      archived: {default: false, type: String},
+      hidden: {default: false, type: String}
     }
 
     BRANCH_TYPES = [
@@ -40,8 +41,22 @@ module TFSGraph
       archived.to_s == "true"
     end
 
+    def hidden?
+      hidden.to_s == "true"
+    end
+
     def named_type
       BRANCH_TYPES[type]
+    end
+
+    def hide!
+      self.hidden = true
+      save
+    end
+
+    def archive!
+      self.archived = true
+      save
     end
 
     def rootless?
