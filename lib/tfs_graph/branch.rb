@@ -25,7 +25,7 @@ module TFSGraph
     ]
 
     ARCHIVED_FLAGS = ["Archive"]
-    RELEASE_MATCHER = /^(\w+)-r-(\d+)$/i
+    RELEASE_MATCHER = /^(.+)-r-(\d+)$/i
 
     act_as_entity
 
