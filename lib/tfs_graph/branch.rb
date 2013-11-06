@@ -124,7 +124,7 @@ module TFSGraph
       path <=> other.path
     end
 
-    def to_json(options={})
+    def as_json(options={})
       options.merge! methods: :related_branches
       super
     end
