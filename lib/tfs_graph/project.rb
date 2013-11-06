@@ -26,6 +26,10 @@ module TFSGraph
     end
 
     def branches
+      branches_with_hidden.reject(&:hidden?)
+    end
+
+    def branches_with_hidden
       outgoing(:branches).options(model: Branch).nodes.to_a
     end
 

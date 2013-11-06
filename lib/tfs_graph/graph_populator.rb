@@ -6,6 +6,7 @@ require 'tfs_graph/changeset_merge/changeset_merge_store'
 
 require 'tfs_graph/associators/changeset_tree_creator'
 require 'tfs_graph/associators/branch_associator'
+require 'tfs_graph/branch/branch_archive_handler'
 
 BranchNotFound = Class.new(Exception)
 
@@ -18,7 +19,7 @@ module TFSGraph
         projects = ProjectStore.cache
         changesets = projects.map {|p| populate_for_project(p) }
 
-        mark_as_updated
+        finalize
         changesets
       end
 
@@ -31,7 +32,6 @@ module TFSGraph
           ChangesetMergeStore.new(branch).cache
         end
 
-        BranchAssociator.associate_groups(changesets)
         changesets
       end
 
@@ -40,7 +40,7 @@ module TFSGraph
           incrementally_update_project(project)
         end
 
-        mark_as_updated
+        finalize
         changesets
       end
 
@@ -61,6 +61,11 @@ module TFSGraph
       end
 
       private
+      def finalize
+        BranchArchiveHandler.hide_all_archives
+        mark_as_updated
+      end
+
       def cache_changesets(branch, using=:cache_all)
         changesets = ChangesetStore.new(branch).send using
         ChangesetTreeCreator.to_tree branch
