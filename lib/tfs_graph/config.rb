@@ -1,8 +1,10 @@
 module TFSGraph
   class Config
-    SETTINGS = [:tfs, :redis]
+    attr_accessor :tfs
+    attr_reader :redis
 
-    attr_accessor *SETTINGS
-
+    def redis=(redis)
+      @redis = Related.redis = redis
+    end
   end
 end
