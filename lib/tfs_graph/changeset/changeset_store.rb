@@ -48,7 +48,7 @@ module TFSGraph
           Related::Relationship.create :changesets, @branch, changeset
           changeset
         rescue Related::ValidationsFailed => ex
-          puts ex.message
+          # puts ex.message
           next
         end
       end.compact

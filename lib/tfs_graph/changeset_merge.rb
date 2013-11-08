@@ -27,9 +27,9 @@ module TFSGraph
         Related::Relationship.create :included, source.branch, target
         Related::Relationship.create :included, target.branch, source
       rescue Related::NotFound => ex
-        puts "Could not find a changeset to merge with: #{ex.message}"
+        # puts "Could not find a changeset to merge with: #{ex.message}"
       rescue Related::ValidationsFailed => ex
-        puts "Couldn't create relationship for #{merge.source_version} to #{merge.target_version}"
+        # puts "Couldn't create relationship for #{merge.source_version} to #{merge.target_version}"
       end
     end
 
