@@ -94,6 +94,10 @@ module TFSGraph
       outgoing(:changesets).options(model: Changeset).nodes.to_a
     end
 
+    def contributors
+      changesets.group_by(&:committer)
+    end
+
     def root_changeset
       @root ||= outgoing(:child).options(model: Changeset).nodes.to_a.first
     end
