@@ -33,8 +33,18 @@ module TFSGraph
       outgoing(:branches).options(model: Branch).nodes.to_a
     end
 
-    def roots
-      branches.select &:master?
+    %w(master release feature).each do |type|
+      define_method "#{type}s" do
+        branches.select {|b| b.send "#{type}?" }
+      end
+
+      define_method "#{type}s_with_hidden" do
+        branches_with_hidden.select {|b| b.send "#{type}?" }
+      end
+
+      define_method "archived_#{type}s" do
+        branches.select {|b| b.send("#{type}?") && b.archived? }
+      end
     end
   end
 end
