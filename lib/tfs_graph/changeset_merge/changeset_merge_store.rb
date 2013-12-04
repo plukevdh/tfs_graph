@@ -6,7 +6,7 @@ module TFSGraph
   class ChangesetMergeStore
     include TFSClient
 
-    LIMIT = 100
+    LIMIT = 10000
 
     def initialize(branch)
       @branch = branch
