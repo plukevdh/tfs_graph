@@ -22,6 +22,14 @@ module TFSGraph
         populator = type.new *args
         populator.populate
       end
+
+      def incrementally_update_all
+        populate_graph(Populators::SinceLast)
+      end
+
+      def populate_all_from_time(time)
+        populate_graph(Populators::SinceDate, time)
+      end
     end
   end
 end
