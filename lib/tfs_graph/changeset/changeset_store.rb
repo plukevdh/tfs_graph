@@ -24,12 +24,20 @@ module TFSGraph
       persist since_last_update
     end
 
+    def cache_since_date(start)
+      persist since_date(start)
+    end
+
     def all
       normalize root_query.run
     end
 
+    def since_date(date)
+      normalize root_query.where("CreationDate gt DateTime'#{date.iso8601}'").run
+    end
+
     def since_last_update
-      normalize root_query.where("CreationDate gt DateTime'#{last_updated_on.iso8601}'").run
+      since_date(last_updated_on)
     end
 
     private

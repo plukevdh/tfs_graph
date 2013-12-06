@@ -18,7 +18,10 @@ module TFSGraph
       begin
         merge = new(attrs)
 
+        # this will throw an error if one of the relations is not found
+        # this is the desired condition as it will throw out the merge if there aren't two endpoints found
         target, source = merge.get_relations
+
         Related::Relationship.create :merges, target, source
 
         # relate the branches as well
