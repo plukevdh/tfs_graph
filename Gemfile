@@ -15,4 +15,5 @@ end
 
 group :test, :development do
   gem "pry"
+  gem 'benchmark-ips'
 end

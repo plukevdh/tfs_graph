@@ -33,11 +33,11 @@ module TFSGraph
     end
 
     def since_date(date)
-      normalize root_query.where("CreationDate gt DateTime'#{date.iso8601}'").run
+      normalize root_query.where("CreationDate gt DateTime'#{date}'").run
     end
 
     def since_last_update
-      since_date(last_updated_on)
+      since_date(last_updated_on.iso8601)
     end
 
     private
