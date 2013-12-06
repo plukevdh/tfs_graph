@@ -28,7 +28,7 @@ module TFSGraph
       end
 
       def populate_all_from_time(time)
-        populate_graph(Populators::SinceDate, time.iso8601)
+        populate_graph(Populators::SinceDate, time)
       end
     end
   end
