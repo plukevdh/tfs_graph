@@ -8,9 +8,9 @@ gem "related", git: "https://github.com/plukevdh/related.git", branch: "preserve
 group :test do
   gem 'rspec'
   gem 'rspec-given'
-  gem 'flexmock'
   gem 'webmock'
   gem 'vcr'
+  gem 'factory_girl'
 end
 
 group :test, :development do

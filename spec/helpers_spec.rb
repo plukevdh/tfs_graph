@@ -3,7 +3,7 @@ require 'tfs_graph/tfs_helpers'
 
 class DemoClass; include TFSGraph::TFSHelpers; end
 
-describe TFSGraph::Helpers do
+describe TFSGraph::TFSHelpers do
   Given(:demo) { DemoClass.new }
   Given(:archived_path) { "$>RJR>_Branches>FAQ>RJRLibraries-FAQ" }
   Given(:normal_path) { "$>RJR>Grizzly" }
