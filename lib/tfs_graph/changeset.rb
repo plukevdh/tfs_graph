@@ -38,12 +38,19 @@ module TFSGraph
       created.strftime("%m/%d/%Y")
     end
 
-    def merges
-      get_merges_for outgoing(:merges)
+    %w(merges merged).each do |type|
+      define_method type do
+        get_merges_for outgoing(type.to_sym)
+      end
+
+      define_method "#{type}_ids" do
+        send(type).map &:id
+      end
     end
 
-    def merged
-      get_merges_for incoming(:merges)
+    def as_json(options={})
+      options.merge! methods: [:merges_ids, :merged_ids]
+      super
     end
 
     def set_merging_to
