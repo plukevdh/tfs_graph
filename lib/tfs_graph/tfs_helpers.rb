@@ -14,6 +14,10 @@ module TFSGraph
       path.gsub "/", ">"
     end
 
+    def odata_path_to_server_path(path)
+      path.gsub ">", "/"
+    end
+
     def branch_project(path)
       path_parts(path)[1]
     end
