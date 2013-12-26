@@ -11,7 +11,7 @@ module TFSGraph
     include TFSHelpers
     include StoreHelpers
 
-    LIMIT = 150
+    LIMIT = 1000
 
     def initialize(project)
       @project = project
