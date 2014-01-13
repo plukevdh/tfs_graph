@@ -30,6 +30,10 @@ module TFSGraph
       activity.group_by(&:formatted_created)
     end
 
+    def active_branches
+      branches.reject(&:archived?)
+    end
+
     def branches
       branches_with_hidden.reject(&:hidden?)
     end
