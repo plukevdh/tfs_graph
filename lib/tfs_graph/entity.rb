@@ -1,10 +1,12 @@
 module TFSGraph
-  class Entity < Related::Node
+  class Entity
+    extend Comparable
+
+    attr_reader :internal_id
+
     def self.inherited(klass)
       define_singleton_method :act_as_entity do
-        klass::SCHEMA.each do |key, details|
-          property key, details[:type]
-        end
+        attr_accessor *klass::SCHEMA.keys
       end
     end
 

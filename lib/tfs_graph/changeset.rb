@@ -5,7 +5,6 @@ require 'tfs_graph/tfs_helpers'
 module TFSGraph
   class Changeset < Entity
     extend TFSHelpers
-    extend Comparable
 
     SCHEMA = {
       comment: {key: "Comment", type: String},

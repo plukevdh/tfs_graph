@@ -4,7 +4,6 @@ require 'tfs_graph/tfs_helpers'
 module TFSGraph
   class Branch < Entity
     extend TFSHelpers
-    extend Comparable
 
     SCHEMA = {
       original_path: {key: "Path", type: String},

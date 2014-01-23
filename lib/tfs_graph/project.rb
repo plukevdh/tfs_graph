@@ -2,7 +2,6 @@ require 'tfs_graph/entity'
 
 module TFSGraph
   class Project < Entity
-    extend Comparable
     SCHEMA = {
       name: {key: "Name"}
     }
