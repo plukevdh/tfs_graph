@@ -28,7 +28,7 @@ module TFSGraph
 
     act_as_entity
 
-    before_create :detect_type, :detect_archived
+    # before_create :detect_type, :detect_archived
 
     BRANCH_TYPES.each do |t|
       define_method "#{t}?".to_sym do
@@ -86,11 +86,11 @@ module TFSGraph
 
     # branches this one touches or is touched
     def related_branches
-      incoming(:related).options(model: Branch).nodes.to_a.map &:id
+      get_nodes(:incoming, :related, Branch).map &:id
     end
 
     def changesets
-      outgoing(:changesets).options(model: Changeset).nodes.to_a
+      get_nodes(:outgoing, :changesets, Changeset)
     end
 
     def contributors
@@ -98,7 +98,7 @@ module TFSGraph
     end
 
     def root_changeset
-      @root ||= outgoing(:child).options(model: Changeset).nodes.to_a.first
+      @root ||= get_nodes(:outgoing, :child, Changeset).first
     end
 
     def last_changeset
@@ -107,20 +107,31 @@ module TFSGraph
 
     def ahead_of_master
       return 0 unless absolute_root
-      self.outgoing(:changesets)
-        .diff(absolute_root.outgoing(:included)
-          .intersect(self.outgoing(:changesets)))
-        .to_a.count
+      my_changes = changesets
+      root_changes = absolute_root.get_nodes(:outgoing, :included, Changeset)
+
+      # get intersection between root and this branch
+      intersect = root_changes & my_changes
+      # get difference of intersect with my changes
+      diff = my_changes - intersect
+
+
+      diff.count
     end
 
     # gets the set of changesets that exist in both root and self
     # then gets a diff of that set and the root.
     def behind_master
       return 0 unless absolute_root
-      absolute_root.outgoing(:changesets)
-        .diff(self.outgoing(:included)
-          .intersect(absolute_root.outgoing(:changesets)))
-        .to_a.count
+      my_changes = get_nodes(:outgoing, :included, Changeset)
+      root_changes = absolute_root.get_nodes(:outgoing, :changesets, Changeset)
+
+      # get intersect between my changes and the root
+      intersect = my_changes & root_changes
+      # get diff of root changes to intersect
+      diff = root_changes - intersect
+
+      diff.count
     end
 
     def <=>(other)

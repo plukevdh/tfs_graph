@@ -22,16 +22,16 @@ module TFSGraph
         # this is the desired condition as it will throw out the merge if there aren't two endpoints found
         target, source = merge.get_relations
 
-        Related::Relationship.create :merges, target, source
+        create_relationship :merges, target, source
 
         # relate the branches as well
-        Related::Relationship.create :related, source.branch, target.branch
+        create_relationship :related, source.branch, target.branch
 
-        Related::Relationship.create :included, source.branch, target
-        Related::Relationship.create :included, target.branch, source
+        create_relationship :included, source.branch, target
+        create_relationship :included, target.branch, source
 
         merge
-      rescue Related::NotFound => ex
+      rescue TFSGraph::Entity::NotFound => ex
         # puts "Could not find a changeset to merge with: #{ex.message}"
       rescue Related::ValidationsFailed => ex
         # puts "Couldn't create relationship for #{merge.source_version} to #{merge.target_version}"

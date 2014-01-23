@@ -10,6 +10,29 @@ module TFSGraph
       end
     end
 
+    def initialize(args)
+      schema.each do |key, details|
+        send "#{key}=", (args[key] || details[:default])
+      end
+    end
+
+    def persisted?
+      !@internal_id.nil?
+    end
+
+    def save!(id)
+      @internal_id = id
+    end
+
+    def to_hash
+      hash = {}
+      schema.keys.each do |key|
+        hash[key] = send key
+      end
+
+      hash
+    end
+
     private
     def schema
       self.class::SCHEMA

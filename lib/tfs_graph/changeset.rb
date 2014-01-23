@@ -12,7 +12,7 @@ module TFSGraph
       created: {key: "CreationDate", type: DateTime},
       id: {key: "Id", type: Integer},
       branch_path: {type: String, default: nil},
-      tags: {type: Array, default: []},
+      # tags: {type: Array, default: []},
       parent: {type: Integer, default: nil},
       merge_parent: {type: Integer, default: nil}
     }
@@ -24,13 +24,13 @@ module TFSGraph
     end
 
     def next
-      child = outgoing(:child).options(model: self.class).nodes.to_a.first
+      child = get_nodes(:outgoing, :child, self.class).first
       raise StopIteration unless child
       child
     end
 
     def branch
-      incoming(:changesets).options(model: Branch).nodes.to_a.first
+      get_nodes(:incoming, :changesets, Branch).first
     end
 
     def formatted_created
@@ -39,7 +39,7 @@ module TFSGraph
 
     %w(merges merged).each do |type|
       define_method type do
-        get_merges_for outgoing(type.to_sym)
+        get_merges_for get_relation(:outgoing, type)
       end
 
       define_method "#{type}_ids" do
@@ -64,7 +64,7 @@ module TFSGraph
 
     private
     def get_merges_for(merge)
-      merge.options(model: self.class).nodes.to_a
+      get_nodes_for(merge, self.class)
     end
   end
 end

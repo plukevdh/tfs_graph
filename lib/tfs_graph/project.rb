@@ -3,7 +3,8 @@ require 'tfs_graph/entity'
 module TFSGraph
   class Project < Entity
     SCHEMA = {
-      name: {key: "Name"}
+      name: {key: "Name"},
+      last_updated: {type: DateTime}
     }
 
     act_as_entity
@@ -38,7 +39,7 @@ module TFSGraph
     end
 
     def branches_with_hidden
-      outgoing(:branches).options(model: Branch).nodes.to_a
+      get_nodes(:outgoing, :branches, Branch)
     end
 
     %w(master release feature).each do |type|
