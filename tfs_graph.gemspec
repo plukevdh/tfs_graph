@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Luke van der Hoeven"]
   spec.email         = ["hungerandthirst@gmail.com"]
   spec.description   = %q{A library to help cache and fetch TFS data}
-  spec.summary       = %q{Simple graph db wrapper for TFS data for Redis caching}
+  spec.summary       = %q{Simple graph db wrapper for TFS data to various backends}
   spec.homepage      = ""
   spec.license       = "MIT"
 
@@ -19,7 +19,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "ruby_tfs"
-  spec.add_dependency "related"
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in tfs_graph.gemspec
 gemspec
 
-gem "related", git: "https://github.com/plukevdh/related.git", branch: "preserve_external_ids"
-
 group :test do
   gem 'rspec'
   gem 'rspec-given'
@@ -16,4 +14,6 @@ end
 group :test, :development do
   gem "pry"
   gem 'benchmark-ips'
+  gem 'related'
+  gem 'neo4j-core'
 end
