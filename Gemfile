@@ -6,6 +6,7 @@ gemspec
 group :test do
   gem 'rspec'
   gem 'rspec-given'
+  gem 'flexmock'
   gem 'webmock'
   gem 'vcr'
   gem 'factory_girl'

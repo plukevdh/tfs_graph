@@ -17,6 +17,6 @@ VCR.configure do |c|
 end
 
 RSpec.configure do |config|
-  config.mock_with :rspec
+  config.mock_with :flexmock
   config.include FactoryGirl::Syntax::Methods
 end
