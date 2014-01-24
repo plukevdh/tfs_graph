@@ -7,14 +7,17 @@ require 'tfs_graph/project'
 require 'tfs_graph/changeset'
 
 describe TFSGraph::Entity do
+  Given(:repo) { flexmock("FakeRepository") }
 
   shared_examples "an entity" do
     context "knows when it is not persisted" do
       Then { entity.should_not be_persisted }
+      And { repo.should_not have_received(:save) }
     end
 
     context "can be persisted" do
-      When { entity.save! 1 }
+      Given { repo.should_receive(:save).with(entity).and_return(1) }
+      When { entity.save! }
       Then { entity.should be_persisted }
       And { entity.internal_id.should == 1 }
     end
@@ -27,7 +30,7 @@ describe TFSGraph::Entity do
 
   context "branch" do
     it_should_behave_like "an entity" do
-      Given(:entity) { TFSGraph::Branch.new(name: "Demo") }
+      Given(:entity) { TFSGraph::Branch.new(repo, name: "Demo") }
 
       context "has properties" do
         Then { entity.name.should == "Demo" }
@@ -38,7 +41,7 @@ describe TFSGraph::Entity do
 
   context "changeset" do
     it_should_behave_like "an entity" do
-      Given(:entity) { TFSGraph::Changeset.new(committer: "James") }
+      Given(:entity) { TFSGraph::Changeset.new(repo, committer: "James") }
 
       context "has properties" do
         Then { entity.committer.should == "James" }
@@ -50,7 +53,7 @@ describe TFSGraph::Entity do
 
   context "project" do
     it_should_behave_like "an entity" do
-      Given(:entity) { TFSGraph::Project.new(name: "FooBarge") }
+      Given(:entity) { TFSGraph::Project.new(repo, name: "FooBarge") }
 
       context "has properties" do
         Then { entity.name.should == "FooBarge" }

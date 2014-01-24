@@ -4,21 +4,18 @@ module TFSGraph
       @type = type
     end
 
+    def save(object, db_object)
+      object.internal_id = db_object.id
+      object
+    end
+
     def build(args={})
-      @type.new args
+      @type.new self, args
     end
 
     def create(args)
       object = build(args)
       save(object)
-    end
-
-    def save(object, id=nil)
-      raise "#{self.class.name} should implement #save method that can persist a #{object.class.name}" unless id
-
-      # persistence handled by subclass, just setting a flag here
-      object.save! id
-      object
     end
   end
 end

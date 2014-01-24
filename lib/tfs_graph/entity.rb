@@ -2,7 +2,7 @@ module TFSGraph
   class Entity
     extend Comparable
 
-    attr_reader :internal_id
+    attr_accessor :internal_id
 
     def self.inherited(klass)
       define_singleton_method :act_as_entity do
@@ -10,7 +10,9 @@ module TFSGraph
       end
     end
 
-    def initialize(args)
+    def initialize(repo, args)
+      @repo = repo
+
       schema.each do |key, details|
         send "#{key}=", (args[key] || details[:default])
       end
@@ -20,7 +22,8 @@ module TFSGraph
       !@internal_id.nil?
     end
 
-    def save!(id)
+    def save!
+      id = @repo.save(self)
       @internal_id = id
     end
 
