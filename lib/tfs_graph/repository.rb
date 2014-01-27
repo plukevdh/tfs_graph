@@ -1,7 +1,12 @@
+require 'tfs_graph/extensions'
+
 module TFSGraph
   class Repository
+    include Extensions
+
     def initialize(type)
       @type = type
+      add_behavior self, constantize("#{type}::Behaviors")
     end
 
     def save(object, db_object)
