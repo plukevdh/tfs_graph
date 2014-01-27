@@ -28,7 +28,12 @@ module TFSGraph
 
     act_as_entity
 
-    # before_create :detect_type, :detect_archived
+    def initialize(repo, args)
+      super
+
+      detect_type
+      detect_archived
+    end
 
     BRANCH_TYPES.each do |t|
       define_method "#{t}?".to_sym do
@@ -50,34 +55,21 @@ module TFSGraph
 
     def hide!
       self.hidden = true
-      save
+      save!
     end
 
     def archive!
       self.archived = true
-      save
+      save!
     end
 
     def rootless?
       !master? && root.empty?
     end
 
-    def type_index(name)
-      BRANCH_TYPES.index(name.to_sym)
-    end
-
     # returns a branch
     def absolute_root
-      @absolute_root ||= begin
-        item = self
-        proj = ProjectStore.find_cached project
-
-        until(item.master?) do
-          item = proj.branches.detect {|branch| branch.path == item.root }
-        end
-
-        item
-      end
+      @absolute_root ||= @repo.absolute_root_for(self)
     end
 
     def branch?
@@ -86,11 +78,11 @@ module TFSGraph
 
     # branches this one touches or is touched
     def related_branches
-      get_nodes(:incoming, :related, Branch).map &:id
+      @repo.get_nodes(:incoming, :related, Branch).map &:id
     end
 
     def changesets
-      get_nodes(:outgoing, :changesets, Changeset)
+      @repo.get_nodes(:outgoing, :changesets, Changeset)
     end
 
     def contributors
@@ -98,7 +90,7 @@ module TFSGraph
     end
 
     def root_changeset
-      @root ||= get_nodes(:outgoing, :child, Changeset).first
+      @root ||= @repo.get_nodes(:outgoing, :child, Changeset).first
     end
 
     def last_changeset
@@ -114,7 +106,6 @@ module TFSGraph
       intersect = root_changes & my_changes
       # get difference of intersect with my changes
       diff = my_changes - intersect
-
 
       diff.count
     end
@@ -144,15 +135,19 @@ module TFSGraph
     end
 
     private
+    def type_index(name)
+      BRANCH_TYPES.index(name.to_sym)
+    end
+
     def detect_type
-      return self.type = type_index(:master) if (root.empty?)
+      return self.type = type_index(:master) if (root.nil? || root.empty?)
       return self.type = type_index(:release) if !(name =~ RELEASE_MATCHER).nil?
       self.type = type_index(:feature)
       nil
     end
 
     def detect_archived
-      self.archived = ARCHIVED_FLAGS.any? {|flag| original_path.include? flag }
+      self.archived = ARCHIVED_FLAGS.any? {|flag| original_path && original_path.include?(flag) }
       nil
     end
 
