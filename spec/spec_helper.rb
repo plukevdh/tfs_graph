@@ -2,11 +2,7 @@ $LOAD_PATH.unshift "../lib"
 
 require 'rspec/given'
 require 'vcr'
-require 'factory_girl'
 require 'pry'
-
-FactoryGirl.definition_file_paths = %w{./factories ./spec/factories}
-FactoryGirl.find_definitions
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
@@ -18,5 +14,4 @@ end
 
 RSpec.configure do |config|
   config.mock_with :flexmock
-  config.include FactoryGirl::Syntax::Methods
 end

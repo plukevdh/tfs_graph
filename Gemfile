@@ -9,7 +9,6 @@ group :test do
   gem 'flexmock'
   gem 'webmock'
   gem 'vcr'
-  gem 'factory_girl'
 end
 
 group :test, :development do
