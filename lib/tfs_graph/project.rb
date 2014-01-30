@@ -2,15 +2,22 @@ require 'tfs_graph/entity'
 
 module TFSGraph
   class Project < Entity
+    NeverUpdated = Class.new
+
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: DateTime}
+      last_updated: {type: DateTime, default: NeverUpdated}
     }
 
+    alias_method :id, :internal_id
     act_as_entity
 
     def <=>(other)
-      name <=> other.name
+      id <=> other.id
+    end
+
+    def last_updated
+      @last_updated || NeverUpdated
     end
 
     def last_change

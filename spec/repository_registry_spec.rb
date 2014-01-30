@@ -23,6 +23,7 @@ describe TFSGraph::RepositoryRegistry do
     When(:entity_repo) { register.send "#{type}_repository" }
     Then { entity_repo.should be_a(TFSGraph::Repository) }
     And { register.instance_variable_get("@#{type}_repo").should_not be_nil }
+    And { register.send("#{type}_repository").should == entity_repo }
   end
 
   context "Branch" do

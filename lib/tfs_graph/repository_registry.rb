@@ -6,8 +6,8 @@ module TFSGraph
 
     TYPES = %w(branch changeset project)
 
-    def initialize(repository)
-      @base_repo = repository
+    def initialize(repo)
+      @base_repo = repo
     end
 
     TYPES.each do |type|

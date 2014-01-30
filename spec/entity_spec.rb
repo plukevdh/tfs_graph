@@ -57,7 +57,7 @@ describe TFSGraph::Entity do
 
       context "has properties" do
         Then { entity.name.should == "FooBarge" }
-        And { entity.last_updated.should be_nil }
+        And { entity.last_updated.should eq(TFSGraph::Project::NeverUpdated) }
       end
     end
   end

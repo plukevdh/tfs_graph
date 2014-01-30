@@ -1,6 +1,6 @@
 module TFSGraph
   class Entity
-    extend Comparable
+    include Comparable
 
     attr_accessor :internal_id
 

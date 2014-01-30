@@ -7,7 +7,15 @@ require 'tfs_graph/branch'
 require 'tfs_graph/project'
 require 'tfs_graph/changeset'
 
+require "tfs_graph/branch/behaviors"
+require "tfs_graph/changeset/behaviors"
+require "tfs_graph/project/behaviors"
+
 describe TFSGraph::Repository do
+  before(:each) do
+    Related.redis.flushall
+  end
+
   context "Related" do
 
     shared_examples "a repo" do
@@ -33,18 +41,12 @@ describe TFSGraph::Repository do
         Given(:type) { TFSGraph::Branch }
         Given(:data) { {} }
       end
+
     end
 
     context "Changeset" do
       it_should_behave_like "a repo" do
         Given(:type) { TFSGraph::Changeset }
-        Given(:data) { {} }
-      end
-    end
-
-    context "Project" do
-      it_should_behave_like "a repo" do
-        Given(:type) { TFSGraph::Project }
         Given(:data) { {} }
       end
     end

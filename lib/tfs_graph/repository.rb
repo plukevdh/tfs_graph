@@ -5,6 +5,8 @@ module TFSGraph
   class Repository
     include Extensions
 
+    NotFound = Class.new(RuntimeError)
+
     def initialize(type)
       @type = type
       add_behavior self, constantize("#{type}::Behaviors")

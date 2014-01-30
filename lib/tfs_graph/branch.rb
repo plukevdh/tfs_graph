@@ -26,6 +26,7 @@ module TFSGraph
     ARCHIVED_FLAGS = ["Archive"]
     RELEASE_MATCHER = /^(.+)-r(\d+)-(\d+)$/i
 
+    alias_method :id, :internal_id
     act_as_entity
 
     def initialize(repo, args)
