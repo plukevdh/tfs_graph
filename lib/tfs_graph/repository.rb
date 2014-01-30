@@ -1,3 +1,4 @@
+require 'active_support/hash_with_indifferent_access'
 require 'tfs_graph/extensions'
 
 module TFSGraph
@@ -16,6 +17,14 @@ module TFSGraph
 
     def build(args={})
       @type.new self, args
+    end
+
+    def rebuild(db_object)
+      attributes = HashWithIndifferentAccess.new db_object.attributes
+
+      obj = build attributes
+      obj.internal_id = db_object.id
+      obj
     end
 
     def create(args)
