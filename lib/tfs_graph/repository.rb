@@ -1,6 +1,14 @@
 require 'active_support/hash_with_indifferent_access'
 require 'tfs_graph/extensions'
 
+require 'tfs_graph/project'
+require 'tfs_graph/branch'
+require 'tfs_graph/changeset'
+
+require 'tfs_graph/project/behaviors'
+require 'tfs_graph/branch/behaviors'
+require 'tfs_graph/changeset/behaviors'
+
 module TFSGraph
   class Repository
     include Extensions
@@ -13,8 +21,7 @@ module TFSGraph
     end
 
     def save(object, db_object)
-      object.internal_id = db_object.id
-      object
+      object.persist db_object
     end
 
     def build(args={})
@@ -25,8 +32,7 @@ module TFSGraph
       attributes = HashWithIndifferentAccess.new db_object.attributes
 
       obj = build attributes
-      obj.internal_id = db_object.id
-      obj
+      obj.persist db_object
     end
 
     def create(args)

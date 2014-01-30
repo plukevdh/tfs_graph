@@ -1,13 +1,22 @@
+require 'tfs_graph/extensions'
+
 module TFSGraph
   class Entity
     include Comparable
+    include Extensions
 
-    attr_accessor :internal_id
+    NotPersisted = Class.new(RuntimeError)
+
+    attr_accessor :db_object
 
     def self.inherited(klass)
       define_singleton_method :act_as_entity do
         attr_accessor *klass::SCHEMA.keys
       end
+    end
+
+    def self.repository
+      TFSGraph::RepositoryRegistry.instance.send "#{base_class_name}_repository"
     end
 
     def initialize(repo, args)
@@ -19,12 +28,16 @@ module TFSGraph
     end
 
     def persisted?
-      !@internal_id.nil?
+      !db_object.nil?
     end
 
     def save!
-      id = @repo.save(self)
-      @internal_id = id
+      persist @repo.save(self)
+    end
+
+    def persist(db_object)
+      @db_object = db_object
+      self
     end
 
     def to_hash
@@ -36,7 +49,11 @@ module TFSGraph
       hash
     end
 
-    private
+    def internal_id
+      raise NotPersisted unless persisted?
+      db_object.id
+    end
+
     def schema
       self.class::SCHEMA
     end

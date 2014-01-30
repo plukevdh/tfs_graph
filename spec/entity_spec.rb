@@ -7,7 +7,11 @@ require 'tfs_graph/project'
 require 'tfs_graph/changeset'
 
 describe TFSGraph::Entity do
-  Given(:repo) { flexmock("FakeRepository") }
+  Given(:repo_class) { flexmock("FakeRepository") }
+  Given(:repo) { flexmock("RepoInstance") }
+  Given { TFSGraph::RepositoryRegistry.register {|r| r.type repo_class } }
+
+  Given { repo_class.should_receive(:new).and_return(repo) }
 
   shared_examples "an entity" do
     context "knows when it is not persisted" do
@@ -16,7 +20,7 @@ describe TFSGraph::Entity do
     end
 
     context "can be persisted" do
-      Given { repo.should_receive(:save).with(entity).and_return(1) }
+      Given { repo.should_receive(:save).with(entity).and_return(flexmock(id: 1)) }
       When { entity.save! }
       Then { entity.should be_persisted }
       And { entity.internal_id.should == 1 }
