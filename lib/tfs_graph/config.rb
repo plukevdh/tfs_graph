@@ -1,10 +1,7 @@
+require 'neo4j'
+
 module TFSGraph
   class Config
-    attr_accessor :tfs
-    attr_reader :redis
-
-    def redis=(server)
-      @redis = Related.redis = server
-    end
+    attr_accessor :tfs, :graph
   end
 end
