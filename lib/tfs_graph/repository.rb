@@ -12,6 +12,7 @@ require 'tfs_graph/changeset/behaviors'
 module TFSGraph
   class Repository
     include Extensions
+    attr_reader :type
 
     NotFound = Class.new(RuntimeError)
 

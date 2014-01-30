@@ -27,6 +27,7 @@ module TFSGraph
         instance_variable_set repo_memo(type), nil
       end
     end
+
     def type(type)
       @base_repo = type
     end

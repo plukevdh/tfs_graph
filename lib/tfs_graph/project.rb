@@ -46,7 +46,7 @@ module TFSGraph
     end
 
     def branches_with_hidden
-      get_nodes(:outgoing, :branches, Branch)
+      @repo.get_nodes(db_object, :outgoing, :branches, Branch)
     end
 
     %w(master release feature).each do |type|

@@ -1,4 +1,5 @@
 require 'related'
+require 'tfs_graph/repository'
 
 module TFSGraph
   class Repository
@@ -9,10 +10,14 @@ module TFSGraph
 
       def find(id)
         begin
-          rebuild Related::Node.find(id)
+          rebuild find_native(id)
         rescue Related::NotFound => e
           raise TFSGraph::Repository::NotFound, e.message
         end
+      end
+
+      def find_native(id)
+        Related::Node.find(id)
       end
 
       def root
@@ -29,7 +34,7 @@ module TFSGraph
 
       def get_nodes_for(relation, type)
         relation.nodes.map do |node|
-          rebuild node
+          type.repository.rebuild node
         end
       end
 
