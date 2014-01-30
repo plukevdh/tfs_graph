@@ -13,7 +13,7 @@ require 'tfs_graph/repository_registry'
 
 describe TFSGraph::RepositoryRegistry do
   Given(:repo) { flexmock(TFSGraph::Repository) }
-  Given(:register) { TFSGraph::RepositoryRegistry.new(repo) }
+  Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type repo }}
 
   shared_examples "a repository builder" do |type|
     Given {

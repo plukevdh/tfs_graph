@@ -1,5 +1,7 @@
 require 'spec_helper'
+
 require 'tfs_graph/repository/related_repository'
+require 'tfs_graph/repository_registry'
 
 # Integration testing between:
 # - different repos
@@ -7,7 +9,11 @@ require 'tfs_graph/repository/related_repository'
 # - objects the repo returns
 
 describe "Related repo integration" do
-  Given(:register) { TFSGraph::RepositoryRegistry.new(TFSGraph::Repository::RelatedRepository) }
+  before(:each) do
+    Related.redis.flushall
+  end
+
+  Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type TFSGraph::Repository::RelatedRepository }}
   Given(:project_repo) { register.project_repository }
   Given { 3.times {|i| project_repo.create(name: "TestProject_#{i}") }}
   Given(:foo) { project_repo.create(name: "TestProject_Foo") }
@@ -41,6 +47,36 @@ describe "Related repo integration" do
   end
 
   context "branches" do
-    Given(:project_repo) { TFSGraph::RepositoryRegistry.branch_repository }
+    Given(:branch_repo) { register.branch_repository }
+    Given { 3.times do |i|
+        branch = branch_repo.create(path: "$/Root/Branch-#{i}", original_path: "$/Root/Branch-#{i}")
+        foo.add_branch(branch)
+      end
+    }
+
+
+    context "can find project for branch" do
+      Given(:branch) {
+        branch_repo.create(
+          path: "$/Root/Branch-Base",
+          original_path: "$/Root/Branch-Base",
+          project: "TestProject_Foo"
+        )
+      }
+      When(:project) { branch_repo.project_for_branch branch}
+      Then { project.should eq(foo) }
+    end
+
+    context "branch lookups through a project" do
+      When(:branches) { foo.branches }
+      Then { branches.size.should eq(3) }
+      And { branches.all? {|p| p.is_a? TFSGraph::Branch }.should be_true }
+    end
+
+    context "can get specific branch for a project by path" do
+      When(:branch) { branch_repo.find_in_project(foo, "$/Root/Branch-1") }
+      Then { branch.should_not be_nil }
+      And { branch.path.should eq("$/Root/Branch-1") }
+    end
   end
 end

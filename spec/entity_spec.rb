@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'tfs_graph/repository_registry'
 require 'tfs_graph/entity'
 
 require 'tfs_graph/branch'
@@ -29,6 +30,11 @@ describe TFSGraph::Entity do
     context "can convert to a hash" do
       When(:result) { entity.to_hash }
       Then { result.keys.should == entity.send(:schema).keys }
+    end
+
+    context "can get repo for self" do
+      When(:me) { entity.class.repository }
+      Then { me.should eq repo }
     end
   end
 
