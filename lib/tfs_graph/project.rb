@@ -20,6 +20,10 @@ module TFSGraph
       @last_updated || NeverUpdated
     end
 
+    def add_branch(branch)
+      @repo.relate(:branches, self, branch)
+    end
+
     def last_change
       branches.map {|b| b.last_changeset }
     end
