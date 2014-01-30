@@ -12,11 +12,10 @@ require "tfs_graph/changeset/behaviors"
 require "tfs_graph/project/behaviors"
 
 describe TFSGraph::Repository do
-  before(:each) do
-    Related.redis.flushall
-  end
-
   context "Related" do
+    before(:each) do
+      Related.redis.flushall
+    end
 
     shared_examples "a repo" do
       context "with related" do
