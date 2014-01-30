@@ -40,5 +40,9 @@ module TFSGraph
       object = build(args)
       save(object)
     end
+
+    def inspect
+      type
+    end
   end
 end
