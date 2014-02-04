@@ -1,8 +1,14 @@
 $LOAD_PATH.unshift "../lib"
 
+require 'simplecov'
+SimpleCov.start do
+  add_filter "/spec/"
+end if ENV["COVERAGE"]
+
 require 'rspec/given'
 require 'vcr'
 require 'pry'
+require 'timecop'
 
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'

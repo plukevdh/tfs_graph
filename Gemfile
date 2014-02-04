@@ -16,4 +16,7 @@ group :test, :development do
   gem 'benchmark-ips'
   gem 'related'
   gem 'neo4j-core'
+  gem 'timecop'
 end
+
+gem 'simplecov', :require => false, :group => :test
