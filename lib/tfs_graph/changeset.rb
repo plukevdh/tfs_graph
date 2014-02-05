@@ -38,13 +38,13 @@ module TFSGraph
     end
 
     def next
-      child = get_nodes(:outgoing, :child, self.class).first
+      child = @repo.get_nodes(db_object, :outgoing, :child, self.class).first
       raise StopIteration unless child
       child
     end
 
     def branch
-      get_nodes(:incoming, :changesets, Branch).first
+      @repo.get_nodes(db_object, :incoming, :changesets, Branch).first
     end
 
     def formatted_created
@@ -53,7 +53,7 @@ module TFSGraph
 
     %w(merges merged).each do |type|
       define_method type do
-        get_merges_for get_relation(:outgoing, type)
+        get_merges_for @repo.get_relation(db_object, :outgoing, type)
       end
 
       define_method "#{type}_ids" do
