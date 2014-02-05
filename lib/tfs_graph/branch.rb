@@ -82,6 +82,14 @@ module TFSGraph
       @repo.get_nodes(db_object, :incoming, :related, Branch).map &:id
     end
 
+    def add_changeset(changeset)
+      # attach branch path
+      changeset.branch_path = self.path
+      changeset.save!
+
+      @repo.relate(:changesets, self, changeset)
+    end
+
     def changesets
       @repo.get_nodes(db_object, :outgoing, :changesets, Changeset)
     end

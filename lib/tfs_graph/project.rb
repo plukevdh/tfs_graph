@@ -20,12 +20,15 @@ module TFSGraph
       @last_updated || NeverUpdated
     end
 
-    def add_branch(branch)
-      @repo.relate(:branches, self, branch)
     end
 
     def last_change
       branches.map {|b| b.last_changeset }
+    def add_branch(branch)
+      branch.project = self.name
+      branch.save!
+
+      @repo.relate(:branches, self, branch)
     end
 
     def all_activity
