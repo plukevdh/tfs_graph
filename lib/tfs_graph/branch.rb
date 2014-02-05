@@ -79,11 +79,11 @@ module TFSGraph
 
     # branches this one touches or is touched
     def related_branches
-      @repo.get_nodes(:incoming, :related, Branch).map &:id
+      @repo.get_nodes(db_object, :incoming, :related, Branch).map &:id
     end
 
     def changesets
-      @repo.get_nodes(:outgoing, :changesets, Changeset)
+      @repo.get_nodes(db_object, :outgoing, :changesets, Changeset)
     end
 
     def contributors
@@ -91,7 +91,7 @@ module TFSGraph
     end
 
     def root_changeset
-      @root ||= @repo.get_nodes(:outgoing, :child, Changeset).first
+      @root ||= @repo.get_nodes(db_object, :outgoing, :child, Changeset).first
     end
 
     def last_changeset
