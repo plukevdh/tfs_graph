@@ -1,4 +1,3 @@
-require 'tfs_graph/entity'
 require 'tfs_graph/changeset'
 
 module TFSGraph
@@ -36,10 +35,6 @@ module TFSGraph
       rescue Related::ValidationsFailed => ex
         # puts "Couldn't create relationship for #{merge.source_version} to #{merge.target_version}"
       end
-    end
-
-    def save
-      # nothing, no need to save
     end
 
     def get_relations
