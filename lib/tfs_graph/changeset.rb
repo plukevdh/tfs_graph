@@ -27,6 +27,12 @@ module TFSGraph
       @id.to_i
     end
 
+    def created
+      return nil unless @created
+      return @created unless @created.is_a? String
+      @created = DateTime.parse @created
+    end
+
     def next
       child = get_nodes(:outgoing, :child, self.class).first
       raise StopIteration unless child
