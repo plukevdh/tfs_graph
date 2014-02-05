@@ -23,6 +23,10 @@ module TFSGraph
       id <=> other.id
     end
 
+    def id
+      @id.to_i
+    end
+
     def next
       child = get_nodes(:outgoing, :child, self.class).first
       raise StopIteration unless child
