@@ -90,6 +90,10 @@ module TFSGraph
       @repo.relate(:changesets, self, changeset)
     end
 
+    def add_child(changeset)
+      @repo.relate(:child, self, changeset)
+    end
+
     def changesets
       @repo.get_nodes(db_object, :outgoing, :changesets, Changeset)
     end
@@ -99,7 +103,7 @@ module TFSGraph
     end
 
     def root_changeset
-      @root ||= @repo.get_nodes(db_object, :outgoing, :child, Changeset).first
+      @root = @repo.get_nodes(db_object, :outgoing, :child, Changeset).first if (@root.nil? || @root.empty?)
     end
 
     def last_changeset

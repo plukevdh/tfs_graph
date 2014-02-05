@@ -33,6 +33,10 @@ module TFSGraph
       @created = DateTime.parse @created
     end
 
+    def add_child(changeset)
+      @repo.relate(:child, self, changeset)
+    end
+
     def next
       child = get_nodes(:outgoing, :child, self.class).first
       raise StopIteration unless child
