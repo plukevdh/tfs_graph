@@ -48,6 +48,7 @@ module TFSGraph
 
       hash
     end
+    alias_method :attributes, :to_hash
 
     def internal_id
       raise NotPersisted unless persisted?
