@@ -44,9 +44,27 @@ describe TFSGraph::Repository do
     end
 
     context "Changeset" do
+      Given(:type) { TFSGraph::Changeset }
+
       it_should_behave_like "a repo" do
-        Given(:type) { TFSGraph::Changeset }
         Given(:data) { {} }
+      end
+
+      context "with changesets" do
+        Given(:repo) { TFSGraph::Repository::RelatedRepository.new type }
+        Given { 3.times {|i| repo.create({id: i+1, comment: "Commit #{i+1}, Because Tests"}) }}
+
+        context "can find changesets by id" do
+          When(:result) { repo.find 2 }
+          Then { result.should_not be_nil }
+          And { result.should be_a TFSGraph::Changeset }
+          And { result.id.should == 2 }
+        end
+
+        context "should raise an error if not found" do
+          When(:result) { repo.find 7 }
+          Then { result.should have_failed(TFSGraph::Repository::NotFound) }
+        end
       end
     end
   end
