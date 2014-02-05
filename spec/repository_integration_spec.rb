@@ -4,6 +4,8 @@ require 'active_support/core_ext/numeric/time'
 require 'tfs_graph/repository/related_repository'
 require 'tfs_graph/repository_registry'
 
+require 'tfs_graph/associators/changeset_tree_builder'
+
 # Integration testing between:
 # - different repos
 # - the registry
@@ -211,9 +213,47 @@ describe "Related repo integration" do
         end
       end
 
-      context "branch accessors" do
-        When(:authors) { branch.contributors }
-        Then { expect(authors.keys).to match_array(["John Gray the 0th", "John Gray the 1th", "John Gray the 2th"]) }
+      context "from a branch" do
+        context "branch accessors" do
+          When(:authors) { branch.contributors }
+          Then { expect(authors.keys).to match_array(["John Gray the 0th", "John Gray the 1th", "John Gray the 2th"]) }
+        end
+
+        context "as a tree" do
+          Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
+
+          context "branch can get it's root node" do
+            When(:root) { branch.root_changeset }
+            Then { root.id.should eq(1230) }
+          end
+
+          context "can get it's last node" do
+            When(:last) { branch.last_changeset }
+            Then { last.id.should eq(1232) }
+          end
+        end
+      end
+
+      context "within changesets" do
+        Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
+        Given(:changeset) { changesets.first }
+
+        context "can walk the chain" do
+          Given(:results) { [] }
+          When {
+            child = changeset.next
+            loop do
+              results << child.id
+              child = child.next
+            end
+          }
+          Then { results.should match_array([1231, 1232])}
+        end
+
+        context "can get branch" do
+          When(:cs_branch) { changeset.branch }
+          Then { cs_branch.should eq(branch) }
+        end
       end
     end
   end
