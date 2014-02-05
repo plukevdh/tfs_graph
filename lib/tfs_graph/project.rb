@@ -22,8 +22,6 @@ module TFSGraph
 
     end
 
-    def last_change
-      branches.map {|b| b.last_changeset }
     def add_branch(branch)
       branch.project = self.name
       branch.save!
