@@ -1,8 +1,8 @@
-require 'tfs_graph/entity'
+require 'tfs_graph/persistable_entity'
 require 'tfs_graph/tfs_helpers'
 
 module TFSGraph
-  class Branch < Entity
+  class Branch < PersistableEntity
     extend TFSHelpers
 
     SCHEMA = {

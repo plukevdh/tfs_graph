@@ -1,7 +1,7 @@
-require 'tfs_graph/entity'
+require 'tfs_graph/persistable_entity'
 
 module TFSGraph
-  class Project < Entity
+  class Project < PersistableEntity
     NeverUpdated = Class.new
 
     SCHEMA = {

@@ -1,13 +1,13 @@
 require 'spec_helper'
 
 require 'tfs_graph/repository_registry'
-require 'tfs_graph/entity'
+require 'tfs_graph/persistable_entity'
 
 require 'tfs_graph/branch'
 require 'tfs_graph/project'
 require 'tfs_graph/changeset'
 
-describe TFSGraph::Entity do
+describe TFSGraph::PersistableEntity do
   Given(:repo_class) { flexmock("FakeRepository") }
   Given(:repo) { flexmock("fake repository instance") }
   Given { TFSGraph::RepositoryRegistry.register {|r| r.type repo_class } }
