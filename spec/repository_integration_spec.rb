@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'active_support/core_ext/numeric/time'
 
 require 'tfs_graph/repository/related_repository'
 require 'tfs_graph/repository_registry'
@@ -54,7 +55,6 @@ describe "Related repo integration" do
       end
     }
 
-
     context "can find project for branch" do
       Given(:branch) {
         branch_repo.create(
@@ -77,6 +77,144 @@ describe "Related repo integration" do
       When(:branch) { branch_repo.find_in_project(foo, "$/Root/Branch-1") }
       Then { branch.should_not be_nil }
       And { branch.path.should eq("$/Root/Branch-1") }
+    end
+
+    context "project's branches" do
+      Given(:archived_branch) {
+        branch_repo.create(
+          path: "$/Root/Branch-Base",
+          original_path: "$/Root/Archived/Branch-Base",
+          project: "TestProject_Foo",
+        )
+      }
+      Given(:hidden_branch) {
+        branch_repo.create(
+          path: "$/Root/Branch-Base",
+          original_path: "$/Root/Branch-Boot",
+          project: "TestProject_Foo",
+          hidden: true
+        )
+      }
+      Given { foo.add_branch(archived_branch) }
+      Given { foo.add_branch(hidden_branch) }
+
+      context "active branches for a project" do
+        When(:active) { foo.active_branches }
+        Then { active.size.should eq(3) }
+      end
+
+      context "all non-hidden branches for a project" do
+        When(:visible) { foo.branches }
+        Then { visible.size.should eq(4) }
+      end
+
+      context "all with hidden" do
+        When(:all) { foo.branches_with_hidden }
+        Then { all.size.should eq(5) }
+      end
+    end
+
+    shared_examples "branch type" do |type, name, root|
+      Given { Related.redis.flushall }
+      Given(:normal) {
+        branch_repo.create(
+          path: "$/Root/#{name}",
+          original_path: "$/Root/#{name}",
+          root: root,
+          name: name
+        )
+      }
+      Given(:archived) {
+        branch_repo.create(
+          path: "$/Root/#{name}",
+          original_path: "$/Root/Archived/#{name}",
+          root: root,
+          name: name
+        )
+      }
+      Given(:hidden) {
+        branch_repo.create(
+          path: "$/Root/#{name}",
+          original_path: "$/Root/#{name}",
+          root: root,
+          name: name,
+          hidden: true
+        )
+      }
+      Given { foo.add_branch(normal) }
+      Given { foo.add_branch(archived) }
+      Given { foo.add_branch(hidden) }
+
+      context "can find the #{type}s" do
+        When(:results) { foo.send "#{type}s" }
+        Then { results.size.should eq(2) }
+      end
+
+      context "can find the hidden #{type}s" do
+        When(:results) { foo.send "#{type}s_with_hidden" }
+        Then { results.size.should eq(3) }
+      end
+
+      context "can find the archived #{type}s" do
+        When(:results) { foo.send "archived_#{type}s" }
+        Then { results.size.should eq(1) }
+      end
+    end
+
+    context "can get the master branches" do
+      it_should_behave_like "branch type", "master", "Branch-Cool", ""
+    end
+
+    context "can get the release branches" do
+      it_should_behave_like "branch type", "release", "Branch-R22-1234", "Branch-Cool"
+    end
+
+    context "can get the feature" do
+      it_should_behave_like "branch type", "feature", "Branch-Base-Boot", "Branch-Cool"
+    end
+
+    context "changeset lookups" do
+      Given(:cs_repo) { register.changeset_repository }
+      Given(:branch) { foo.branches.first }
+      Given!(:changesets) {
+        3.times.map do |i|
+          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: "#{i.days.ago}")
+          branch.add_changeset(cs)
+          cs
+        end
+      }
+      Given!(:noise) {
+        # some extra noise
+        3.times.map do |i|
+          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: "#{i.days.ago}")
+          foo.branches[1].add_changeset(cs)
+          cs
+        end
+      }
+
+      context "paths are set" do
+        When(:cs) { branch.changesets }
+        Then { cs.map(&:branch_path).all? {|path| path == branch.path }.should be_true }
+      end
+
+      context "from a project" do
+        context "all" do
+          When(:activity) { foo.all_activity }
+          Then { activity.size.should == 6 }
+          And { expect(activity).to match_array(noise.concat(changesets)) }
+        end
+
+        context "all_activity_by_date" do
+          When(:activity) { foo.all_activity_by_date(0.5.days.ago) }
+          Then { activity.values.flatten.size.should == 2 }
+          And { expect(activity.values.flatten.map(&:id)).to match_array([3230, 1230]) }
+        end
+      end
+
+      context "branch accessors" do
+        When(:authors) { branch.contributors }
+        Then { expect(authors.keys).to match_array(["John Gray the 0th", "John Gray the 1th", "John Gray the 2th"]) }
+      end
     end
   end
 end
