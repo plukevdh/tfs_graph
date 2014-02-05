@@ -4,8 +4,10 @@ require 'tfs_graph/repository'
 module TFSGraph
   class Repository
     class RelatedRepository < Repository
+      # updates or save the DB object
       def save(object)
-        super object, Related::Node.create(object.to_hash)
+        db_object = object.persisted? ? update(object) : persist(object)
+        super object, db_object
       end
 
       def find(id)
@@ -40,6 +42,27 @@ module TFSGraph
 
       def get_relation(entity, direction, relation)
         entity.send(direction.to_sym, relation.to_sym)
+      end
+
+      private
+      # persist and update both expose the DB object from Redis/Related
+      # make methods private so we have to use save to persist
+
+      # create the DB object
+      def persist(object)
+        Related::Node.create(object.to_hash)
+      end
+
+      # update the DB object
+      def update(object)
+        db_object = object.db_object
+
+        object.attributes.each do |key, value|
+          db_object.write_attribute key, value
+        end
+
+        db_object.save
+        db_object
       end
     end
   end

@@ -32,7 +32,7 @@ module TFSGraph
     end
 
     def save!
-      persist @repo.save(self)
+      @repo.save(self)
     end
 
     def persist(db_object)
