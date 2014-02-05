@@ -20,6 +20,9 @@ module TFSGraph
       @last_updated || NeverUpdated
     end
 
+    def updated!
+      @last_updated = Time.now.utc
+      save!
     end
 
     def add_branch(branch)
