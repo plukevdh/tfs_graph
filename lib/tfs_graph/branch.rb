@@ -82,6 +82,10 @@ module TFSGraph
       @repo.get_nodes(db_object, :incoming, :related, Branch).map &:id
     end
 
+    def merged_changesets
+      @repo.get_nodes(db_object, :outgoing, :included, Changeset)
+    end
+
     def add_changeset(changeset)
       # attach branch path
       changeset.branch_path = self.path
@@ -113,7 +117,7 @@ module TFSGraph
     def ahead_of_master
       return 0 unless absolute_root
       my_changes = changesets
-      root_changes = absolute_root.get_nodes(:outgoing, :included, Changeset)
+      root_changes = absolute_root.merged_changesets
 
       # get intersection between root and this branch
       intersect = root_changes & my_changes
@@ -127,8 +131,8 @@ module TFSGraph
     # then gets a diff of that set and the root.
     def behind_master
       return 0 unless absolute_root
-      my_changes = get_nodes(:outgoing, :included, Changeset)
-      root_changes = absolute_root.get_nodes(:outgoing, :changesets, Changeset)
+      my_changes = merged_changesets
+      root_changes = absolute_root.changesets
 
       # get intersect between my changes and the root
       intersect = my_changes & root_changes
