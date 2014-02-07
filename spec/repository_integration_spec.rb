@@ -5,6 +5,7 @@ require 'tfs_graph/repository/related_repository'
 require 'tfs_graph/repository_registry'
 
 require 'tfs_graph/associators/changeset_tree_builder'
+require 'tfs_graph/changeset_merge'
 
 # Integration testing between:
 # - different repos
@@ -193,6 +194,7 @@ describe "Related repo integration" do
           cs
         end
       }
+      Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
 
       context "paths are set" do
         When(:cs) { branch.changesets }
@@ -220,7 +222,6 @@ describe "Related repo integration" do
         end
 
         context "as a tree" do
-          Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
 
           context "branch can get it's root node" do
             When(:root) { branch.root_changeset }
@@ -235,7 +236,6 @@ describe "Related repo integration" do
       end
 
       context "within changesets" do
-        Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
         Given(:changeset) { changesets.first }
 
         context "can walk the chain" do
@@ -253,6 +253,34 @@ describe "Related repo integration" do
         context "can get branch" do
           When(:cs_branch) { changeset.branch }
           Then { cs_branch.should eq(branch) }
+        end
+      end
+
+      context "with merges" do
+        Given(:merge_attrs) {[
+          {source_version: 3231, target_version: 1230},
+          {source_version: 3232, target_version: 1231}
+        ]}
+        Given { merge_attrs.each {|attrs| TFSGraph::ChangesetMerge.create attrs }}
+
+        context "related branches" do
+          When(:related) { branch.related_branches }
+          Then { related.size.should eq(1) }
+          And { related.first.should == foo.branches[1].internal_id }
+        end
+
+        context "merging changesets" do
+          Given(:changeset) { cs_repo.find(1230) }
+          When(:merges) { changeset.merges }
+          Then { merges.size.should eq(1) }
+          And { merges.first.id.should == 3231 }
+        end
+
+        context "merged changesets" do
+          Given(:changeset) { cs_repo.find(3232) }
+          When(:merges) { changeset.merged }
+          Then { merges.size.should eq(1) }
+          And { merges.first.id.should == 1231 }
         end
       end
     end
