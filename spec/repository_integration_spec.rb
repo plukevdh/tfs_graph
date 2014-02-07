@@ -258,29 +258,52 @@ describe "Related repo integration" do
 
       context "with merges" do
         Given(:merge_attrs) {[
-          {source_version: 3231, target_version: 1230},
-          {source_version: 3232, target_version: 1231}
+          {source_version: 1230, target_version: 3230},
+          {source_version: 1231, target_version: 3231},
+          {source_version: 1232, target_version: 3231}
         ]}
         Given { merge_attrs.each {|attrs| TFSGraph::ChangesetMerge.create attrs }}
 
-        context "related branches" do
-          When(:related) { branch.related_branches }
-          Then { related.size.should eq(1) }
-          And { related.first.should == foo.branches[1].internal_id }
-        end
+        context "parentage" do
+          Given(:child) { foo.branches[1] }
+          Given { child.root = branch.path; child.send :detect_type; child.save! }
 
-        context "merging changesets" do
-          Given(:changeset) { cs_repo.find(1230) }
-          When(:merges) { changeset.merges }
-          Then { merges.size.should eq(1) }
-          And { merges.first.id.should == 3231 }
+          Then { branch.should be_master }
+
+          context "related branches" do
+            When(:related) { child.related_branches }
+            Then { related.size.should eq(1) }
+            And { related.first.should == branch.internal_id }
+          end
+
+          context "get absolute root" do
+            When(:root) { child.absolute_root }
+            Then { root.should == branch }
+          end
+
+          context "ahead stats" do
+            When(:ahead) { child.ahead_of_master }
+            Then { ahead.should eq(1) }
+          end
+
+          context "behind stats" do
+            When(:behind) { child.behind_master }
+            Then { behind.should eq(0) }
+          end
         end
 
         context "merged changesets" do
-          Given(:changeset) { cs_repo.find(3232) }
+          Given(:changeset) { cs_repo.find(1230) }
           When(:merges) { changeset.merged }
           Then { merges.size.should eq(1) }
-          And { merges.first.id.should == 1231 }
+          And { merges.map(&:id).should match_array([3230]) }
+        end
+
+        context "merges changesets" do
+          Given(:changeset) { cs_repo.find(3231) }
+          When(:merges) { changeset.merges }
+          Then { merges.size.should eq(2) }
+          And { merges.map(&:id).should match_array([1232, 1231]) }
         end
       end
     end
