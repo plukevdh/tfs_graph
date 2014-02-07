@@ -23,6 +23,15 @@ module TFSGraph
       id <=> other.id
     end
 
+    # override for the & (intersect) operator
+    def eql?(other)
+      other.is_a?(self.class) && other == self
+    end
+
+    def hash
+      @internal_id.hash
+    end
+
     def id
       @id.to_i
     end
