@@ -7,7 +7,7 @@ module TFSGraph
 
       def absolute_root_for(branch)
         root = branch
-        proj = project_for_branch
+        proj = project_for_branch branch
 
         until(root.master?) do
           root = proj.branches.detect {|b| b.path == root.root }
