@@ -42,6 +42,10 @@ module TFSGraph
         instance_variable_set(repo_memo(type), repo)
         repo
       end
+
+      define_singleton_method "#{type}_repository" do
+        instance.send "#{type}_repository"
+      end
     end
 
     private
