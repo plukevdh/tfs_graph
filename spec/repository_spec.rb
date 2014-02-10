@@ -19,7 +19,7 @@ describe TFSGraph::Repository do
 
     shared_examples "a repo" do
       context "with related" do
-        Given(:repo) { TFSGraph::Repository::RelatedRepository.new type }
+        Given(:repo) { TFSGraph::Repository::RelatedRepository.new type, "localhost:6379" }
 
         context "can build an entity (no persist)" do
           When(:object) { repo.build(data) }
@@ -51,7 +51,7 @@ describe TFSGraph::Repository do
       end
 
       context "with changesets" do
-        Given(:repo) { TFSGraph::Repository::RelatedRepository.new type }
+        Given(:repo) { TFSGraph::Repository::RelatedRepository.new type, 'localhost:6379' }
         Given { 3.times {|i| repo.create({id: i+1, comment: "Commit #{i+1}, Because Tests"}) }}
 
         context "can find changesets by id" do

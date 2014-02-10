@@ -32,12 +32,16 @@ module TFSGraph
       @base_repo = type
     end
 
+    def server(path)
+      @server = path
+    end
+
     TYPES.each do |type|
       define_method "#{type}_repository" do
         existing = instance_variable_get repo_memo(type)
         return existing unless existing.nil?
 
-        repo = @base_repo.new constantize("TFSGraph::#{type.capitalize}")
+        repo = @base_repo.new constantize("TFSGraph::#{type.capitalize}"), @server
 
         instance_variable_set(repo_memo(type), repo)
         repo

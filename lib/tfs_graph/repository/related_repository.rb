@@ -4,6 +4,11 @@ require 'tfs_graph/repository'
 module TFSGraph
   class Repository
     class RelatedRepository < Repository
+      def initialize(type, server)
+        super
+        Related.redis = server
+      end
+
       # updates or save the DB object
       def save(object)
         db_object = object.persisted? ? update(object) : persist(object)
