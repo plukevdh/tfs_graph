@@ -6,8 +6,10 @@ module TFSGraph
         changesets.each.with_index do |changeset, i|
           parent = (i == 0) ? branch : changesets[i-1]
 
-          changeset.parent = parent.internal_id
-          changeset.save!
+          if parent.is_a? TFSGraph::Changeset
+            changeset.parent = parent.internal_id
+            changeset.save!
+          end
 
           parent.add_child changeset
         end
