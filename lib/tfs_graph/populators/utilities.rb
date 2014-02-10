@@ -27,7 +27,7 @@ module TFSGraph
       end
 
       def generate_branch_tree(branch)
-        ChangesetTreeCreator.to_tree branch
+        ChangesetTreeBuilder.to_tree branch
       end
 
       def collect_merges(branch)

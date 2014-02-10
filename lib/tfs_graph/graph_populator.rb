@@ -3,7 +3,7 @@ require 'tfs_graph/branch/branch_store'
 require 'tfs_graph/changeset/changeset_store'
 require 'tfs_graph/changeset_merge/changeset_merge_store'
 
-require 'tfs_graph/associators/changeset_tree_creator'
+require 'tfs_graph/associators/changeset_tree_builder'
 require 'tfs_graph/associators/branch_associator'
 require 'tfs_graph/branch/branch_archive_handler'
 
