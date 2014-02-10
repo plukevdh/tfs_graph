@@ -42,6 +42,10 @@ module TFSGraph
       end
     end
 
+    def archived
+      @archived.to_s
+    end
+
     def archived?
       archived.to_s == "true"
     end
