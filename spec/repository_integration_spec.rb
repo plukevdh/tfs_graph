@@ -277,6 +277,12 @@ describe "Related repo integration" do
             And { related.first.should == branch.internal_id }
           end
 
+          context "json reports related branches" do
+            When(:data) { JSON.parse child.to_json, symbolize_names: true }
+            Then { data[:related_branches].size.should eq(1) }
+            And { data[:related_branches].should match_array([branch.internal_id]) }
+          end
+
           context "get absolute root" do
             When(:root) { child.absolute_root }
             Then { root.should == branch }

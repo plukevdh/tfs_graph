@@ -151,8 +151,10 @@ module TFSGraph
     end
 
     def as_json(options={})
-      options.merge! methods: :related_branches
-      super
+      results = super
+      results[:related_branches] = related_branches
+
+      results
     end
 
     def type_index(name)
