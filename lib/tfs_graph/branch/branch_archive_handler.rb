@@ -7,7 +7,7 @@ module TFSGraph
     # is fairly useless, we'll hide it in favor of the "ghost" branch.
     class << self
       def hide_all_archives
-        ProjectStore.all_cached.map {|project| hide_moved_archives_for_project(project) }
+        RepositoryRegistry.project_repository.all.map {|project| hide_moved_archives_for_project(project) }
       end
 
       def hide_moved_archives_for_project(project)

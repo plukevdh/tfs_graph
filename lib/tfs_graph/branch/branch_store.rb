@@ -44,8 +44,9 @@ module TFSGraph
 
     def persist(branches)
       branches.map do |branch_attrs|
-        branch = Branch.create branch_attrs
-        Related::Relationship.create(:branches, @project, branch)
+        branch = RepositoryRegistry.branch_repository.build branch_attrs
+        @project.add_branch(branch)
+
         branch
       end
     end
