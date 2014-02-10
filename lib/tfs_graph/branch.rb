@@ -155,10 +155,11 @@ module TFSGraph
       super
     end
 
-    private
     def type_index(name)
       BRANCH_TYPES.index(name.to_sym)
     end
+
+    private
 
     def detect_type
       return self.type = type_index(:master) if (root.nil? || root.empty?)
