@@ -1,5 +1,6 @@
 require "tfs_graph/version"
 require "tfs_graph/config"
+require 'tfs_graph/repository_registry'
 require 'tfs_graph/graph_populator'
 
 module TFSGraph
