@@ -199,6 +199,7 @@ describe "Related repo integration" do
       context "paths are set" do
         When(:cs) { branch.changesets }
         Then { cs.map(&:branch_path).all? {|path| path == branch.path }.should be_true }
+        And { cs.all? {|b| b.is_a? TFSGraph::Changeset }.should be_true }
       end
 
       context "from a project" do
