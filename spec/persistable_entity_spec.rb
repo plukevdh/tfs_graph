@@ -44,7 +44,7 @@ describe TFSGraph::PersistableEntity do
 
       context "has properties" do
         Then { entity.name.should == "Demo" }
-        And { entity.archived.should == false }
+        And { entity.archived.should == "false" }
       end
     end
   end
