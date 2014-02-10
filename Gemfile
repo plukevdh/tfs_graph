@@ -15,8 +15,11 @@ group :test, :development do
   gem "pry"
   gem 'benchmark-ips'
   gem 'related'
-  gem 'neo4j-core'
   gem 'timecop'
+
+  platforms :jruby do
+    gem 'neo4j-core'
+  end
 end
 
 gem 'simplecov', :require => false, :group => :test
