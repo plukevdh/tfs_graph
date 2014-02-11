@@ -74,9 +74,11 @@ module TFSGraph
     def as_json(options={})
       results = super
 
-      [:merge_ids, :merged_ids].each do |key|
+      [:merges_ids, :merged_ids].each do |key|
         results[key] = self.send key
       end
+
+      results
     end
 
     def set_merging_to
