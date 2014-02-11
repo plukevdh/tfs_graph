@@ -10,17 +10,17 @@ module TFSGraph
 
     def self.register
       # assume re-registering means we want to clear existing repos
-      instance.reset
+      instance.reset!
       yield instance if block_given?
 
       instance
     end
 
     def initialize
-      reset
+      reset!
     end
 
-    def reset
+    def reset!
       @base_repo = nil
 
       TYPES.each do |type|
