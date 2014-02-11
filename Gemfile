@@ -14,7 +14,7 @@ end
 group :test, :development do
   gem "pry"
   gem 'benchmark-ips'
-  gem 'related'
+  gem "related", git: "https://github.com/plukevdh/related.git", branch: "namespace_fix"
   gem 'timecop'
 
   platforms :jruby do
