@@ -1,4 +1,5 @@
 require 'time'
+require 'tfs_graph/server_registry'
 
 module TFSGraph
   module StoreHelpers
