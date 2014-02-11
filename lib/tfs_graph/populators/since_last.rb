@@ -4,7 +4,7 @@ module TFSGraph
       include Utilities
 
       def populate
-        ProjectStore.all_cached.map do |project|
+        TFSGraph::RepositoryRegistry.project_repository.all.map do |project|
           new_changesets = project.active_branches.map {|branch| collect_changesets branch, :cache_since_last_update}
           new_branches = BranchStore.new(project).cache_since_last_update
 
