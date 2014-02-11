@@ -153,6 +153,7 @@ module TFSGraph
     def as_json(options={})
       results = super
       results[:related_branches] = related_branches
+      results[:id] = internal_id
 
       results
     end
