@@ -25,7 +25,7 @@ module TFSGraph
 
     private
     def redis
-      Related.redis
+      ServerRegistry.redis
     end
   end
 end

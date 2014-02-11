@@ -6,7 +6,6 @@ module TFSGraph
     class RelatedRepository < Repository
       def initialize(type, server)
         super
-        Related.redis = server
       end
 
       # updates or save the DB object

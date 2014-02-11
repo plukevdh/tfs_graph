@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'active_support/core_ext/numeric/time'
 
 require 'tfs_graph/repository/related_repository'
+require 'tfs_graph/server_registry'
 require 'tfs_graph/repository_registry'
 
 require 'tfs_graph/associators/changeset_tree_builder'
@@ -13,8 +14,12 @@ require 'tfs_graph/changeset_merge'
 # - objects the repo returns
 
 describe "Related repo integration" do
+  before :all do
+    TFSGraph::ServerRegistry.register {|r| r.server url: "redis://localhost:6379", namespace: "test" }
+  end
+
   before(:each) do
-    Related.redis.flushall
+    TFSGraph::ServerRegistry.redis.flushall
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type TFSGraph::Repository::RelatedRepository }}

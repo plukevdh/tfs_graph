@@ -2,6 +2,7 @@ require 'spec_helper'
 
 require 'tfs_graph/repository'
 require 'tfs_graph/repository/related_repository'
+require 'tfs_graph/server_registry'
 
 require 'tfs_graph/branch'
 require 'tfs_graph/project'
@@ -13,8 +14,12 @@ require "tfs_graph/project/behaviors"
 
 describe TFSGraph::Repository do
   context "Related" do
+    before :all do
+      TFSGraph::ServerRegistry.register {|r| r.server url: "redis://localhost:6379", namespace: "test" }
+    end
+
     before(:each) do
-      Related.redis.flushall
+      TFSGraph::ServerRegistry.redis.flushall
     end
 
     shared_examples "a repo" do
@@ -40,7 +45,6 @@ describe TFSGraph::Repository do
         Given(:type) { TFSGraph::Branch }
         Given(:data) { {} }
       end
-
     end
 
     context "Changeset" do
