@@ -123,7 +123,7 @@ describe "Related repo integration" do
     end
 
     shared_examples "branch type" do |type, name, root|
-      Given { Related.redis.flushall }
+      Given { TFSGraph::ServerRegistry.redis.flushall }
       Given(:normal) {
         branch_repo.create(
           path: "$/Root/#{name}",
