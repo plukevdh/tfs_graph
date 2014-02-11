@@ -18,7 +18,7 @@ module TFSGraph
         return if root.nil?
 
         change.parent = root.id
-        change.save
+        change.save!
       end
     end
   end
