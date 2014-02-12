@@ -15,7 +15,7 @@ require 'tfs_graph/changeset_merge'
 
 describe "Related repo integration" do
   before :all do
-    TFSGraph::ServerRegistry.register {|r| r.server url: "redis://localhost:6379", namespace: "test" }
+    TFSGraph::ServerRegistry.register {|r| r.redis url: "redis://localhost:6379", namespace: "test" }
   end
 
   before(:each) do

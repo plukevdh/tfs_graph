@@ -4,10 +4,9 @@ module TFSGraph
   class ServerRegistry
     include Singleton
 
-    DEFAULT_SERVER = {url: "redis://localhost:6379", namespace: "tfs_graph" }
+    DEFAULT_REDIS = {url: "redis://localhost:6379", namespace: "tfs_graph" }
 
     def reset!
-      @server = DEFAULT_SERVER
       @redis = nil
     end
 
@@ -26,15 +25,14 @@ module TFSGraph
       @server = server
     end
 
-    def redis
+    def redis(url: DEFAULT_REDIS[:url], namespace: DEFAULT_REDIS[:namespace])
       return @redis unless @redis.nil?
 
-      @redis = Redis::Namespace.new(@server[:namespace], redis: Redis.connect(url: @server[:url]))
-      Related.redis = @redis
+      @redis = Redis::Namespace.new(namespace, redis: Redis.connect(url: url))
     end
 
-    define_singleton_method :redis do
-      instance.redis
+    define_singleton_method :redis do |url: DEFAULT_REDIS[:url], namespace: DEFAULT_REDIS[:namespace]|
+      instance.redis url: url, namespace: namespace
     end
   end
 end
