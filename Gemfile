@@ -18,7 +18,7 @@ group :test, :development do
   gem 'timecop'
 
   platforms :jruby do
-    gem 'neo4j-core', '3.0.0.alpha.9'
+    gem 'neo4j-core', git: 'https://github.com/andreasronge/neo4j-core.git'
     gem 'neo4j-community'
   end
 end
