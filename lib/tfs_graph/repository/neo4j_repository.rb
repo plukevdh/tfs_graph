@@ -43,8 +43,11 @@ module TFSGraph
       # update the DB object
       def update(object)
         db_object = object.db_object
-        db_object.update_props object.attributes
+        attrs = object.attributes
 
+        original_id = attrs.delete(:id)
+
+        db_object.update_props attrs
         db_object
       end
     end
