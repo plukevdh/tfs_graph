@@ -5,9 +5,13 @@ module TFSGraph
   class Repository
     class Neo4jRepository < Repository
       def find_native(id)
-        node = Neo4j::Node.load(id)
+        node = Neo4j::Label.find_nodes(type.base_class_name.to_sym, :id, id).to_a.first
+
         raise NotFound, id unless node
         node
+      end
+
+      def find_by(property=:id, value)
       end
 
       def root
@@ -24,6 +28,22 @@ module TFSGraph
         end
       end
 
+      def get_relation(entity, direction, relation)
+        entity.rels(dir: direction.to_sym, type: relation.to_sym).to_a
+      end
+
+      def get_nodes_for(relation, type)
+        nodes = []
+
+        Neo4j::Transaction.run do
+          nodes = relation.nodes.map do |node|
+            type.repository.rebuild node
+          end
+        end
+
+        nodes
+      end
+
       def rebuild(db_object)
         attributes = HashWithIndifferentAccess.new db_object.props
 
@@ -37,17 +57,14 @@ module TFSGraph
 
       # create the DB object
       def persist(object)
-        Neo4j::Node.create(object.to_hash, object.class.name)
+        Neo4j::Node.create(object.to_hash, object.base_class_name)
       end
 
       # update the DB object
       def update(object)
         db_object = object.db_object
-        attrs = object.attributes
 
-        original_id = attrs.delete(:id)
-
-        db_object.update_props attrs
+        db_object.update_props  object.attributes
         db_object
       end
     end

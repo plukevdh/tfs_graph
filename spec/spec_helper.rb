@@ -20,4 +20,8 @@ end
 
 RSpec.configure do |config|
   config.mock_with :flexmock
+
+  config.after(:suite) do
+    FileUtils.rm_rf File.join(File.dirname(__FILE__), "tmp", "db", "*")
+  end
 end

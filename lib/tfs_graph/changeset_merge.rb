@@ -47,7 +47,7 @@ module TFSGraph
     end
 
     def join(relation, target, source)
-      repo.relate(relation, target, source)
+      repo.relate(relation, target.db_object, source.db_object)
     end
 
     private
