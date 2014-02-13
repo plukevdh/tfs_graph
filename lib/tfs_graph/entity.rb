@@ -38,7 +38,7 @@ module TFSGraph
     private
     def ressurect_time(time)
       return time if (time.is_a?(Time) || time.nil?)
-      Time::at time
+      Time::at time.to_i
     end
   end
 end
