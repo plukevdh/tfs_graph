@@ -2,11 +2,9 @@ require 'tfs_graph/persistable_entity'
 
 module TFSGraph
   class Project < PersistableEntity
-    NeverUpdated = Class.new
-
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: DateTime, default: nil}
+      last_updated: {type: Time, default: nil}
     }
 
     act_as_entity

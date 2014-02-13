@@ -64,8 +64,6 @@ describe "Neo4j repo integration" do
     Given(:branch_repo) { register.branch_repository }
     Given { 3.times do |i|
         branch = branch_repo.create(path: "$/Root/Branch-#{i}", original_path: "$/Root/Branch-#{i}")
-
-        binding.pry
         foo.add_branch(branch)
       end
     }
@@ -130,7 +128,6 @@ describe "Neo4j repo integration" do
     end
 
     shared_examples "branch type" do |type, name, root|
-      Given { TFSGraph::ServerRegistry.server = Neo4j::Session.open(:embedded_db, '/spec/tmp/db', auto_commit: true) }
       Given(:normal) {
         branch_repo.create(
           path: "$/Root/#{name}",
@@ -193,7 +190,7 @@ describe "Neo4j repo integration" do
       Given(:branch) { foo.branches.first }
       Given!(:changesets) {
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: i.days.ago)
           branch.add_changeset(cs)
           cs
         end
@@ -201,7 +198,7 @@ describe "Neo4j repo integration" do
       Given!(:noise) {
         # some extra noise
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: i.days.ago)
           foo.branches[1].add_changeset(cs)
           cs
         end

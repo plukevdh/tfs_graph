@@ -41,11 +41,26 @@ describe TFSGraph::PersistableEntity do
 
   context "branch" do
     it_should_behave_like "an entity" do
-      Given(:entity) { TFSGraph::Branch.new(repo, name: "Demo") }
+      Given(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: Time.now) }
 
       context "has properties" do
         Then { entity.name.should == "Demo" }
         And { entity.archived.should == "false" }
+        And { entity.created.should be_a Time }
+      end
+    end
+
+    context "time converter" do
+      Given(:time) { Time.now }
+
+      context "can rebuild time from unixtime" do
+        When(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: time.to_i) }
+        Then { entity.created.to_i.should eq(time.to_i) }
+      end
+
+      context "can rebuild time from Time" do
+        When(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: time) }
+        Then { entity.created.to_i.should eq(time.to_i) }
       end
     end
   end
@@ -68,7 +83,7 @@ describe TFSGraph::PersistableEntity do
 
       context "has properties" do
         Then { entity.name.should == "FooBarge" }
-        And { entity.last_updated.should eq(TFSGraph::Project::NeverUpdated) }
+        And { entity.last_updated.should be_nil }
       end
     end
   end

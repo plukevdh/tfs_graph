@@ -9,7 +9,7 @@ module TFSGraph
     SCHEMA = {
       comment: {key: "Comment", type: String},
       committer: {key: "Committer", converter: ->(name) { base_username(name) }, type: String},
-      created: {key: "CreationDate", type: DateTime},
+      created: {key: "CreationDate", type: Time},
       id: {key: "Id", type: Integer},
       branch_path: {type: String, default: nil},
       # tags: {type: Array, default: []},

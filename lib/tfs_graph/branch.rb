@@ -11,7 +11,7 @@ module TFSGraph
       project: {converter: ->(path) { branch_project(path) }, key: "Path", type: String},
       name: {converter: ->(path) { branch_path_to_name(path) }, key: "Path", type: String},
       root: {converter: ->(path) { repath_archive(server_path_to_odata_path(path)) if path }, key: "ParentBranch", type: String},
-      created: {key: "DateCreated", type: DateTime},
+      created: {key: "DateCreated", type: Time},
       type: {default: "Feature", type: Integer},
       archived: {default: false, type: String},
       hidden: {default: false, type: String}
