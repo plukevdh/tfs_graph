@@ -186,7 +186,7 @@ describe "Related repo integration" do
       Given(:branch) { foo.branches.first }
       Given!(:changesets) {
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: i.days.ago)
           branch.add_changeset(cs)
           cs
         end
@@ -194,7 +194,7 @@ describe "Related repo integration" do
       Given!(:noise) {
         # some extra noise
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: i.days.ago)
           foo.branches[1].add_changeset(cs)
           cs
         end
