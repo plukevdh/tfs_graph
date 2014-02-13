@@ -22,7 +22,12 @@ module TFSGraph
       add_behavior self, constantize("#{type}::Behaviors")
     end
 
-    def save(object, db_object)
+    def find(id)
+      rebuild find_native(id)
+    end
+
+    def save(object)
+      db_object = object.persisted? ? update(object) : persist(object)
       object.persist db_object
     end
 

@@ -9,22 +9,12 @@ module TFSGraph
         Related.redis = ServerRegistry.redis
       end
 
-      # updates or save the DB object
-      def save(object)
-        db_object = object.persisted? ? update(object) : persist(object)
-        super object, db_object
-      end
-
-      def find(id)
+      def find_native(id)
         begin
-          rebuild find_native(id)
+          Related::Node.find(id)
         rescue Related::NotFound => e
           raise TFSGraph::Repository::NotFound, e.message
         end
-      end
-
-      def find_native(id)
-        Related::Node.find(id)
       end
 
       def root
