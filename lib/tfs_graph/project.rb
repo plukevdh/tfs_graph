@@ -6,7 +6,7 @@ module TFSGraph
 
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: DateTime, default: NeverUpdated}
+      last_updated: {type: DateTime, default: nil}
     }
 
     act_as_entity
@@ -15,9 +15,9 @@ module TFSGraph
       id <=> other.id
     end
 
-    def last_updated
-      @last_updated || NeverUpdated
-    end
+    # def last_updated
+    #   @last_updated || NeverUpdated
+    # end
 
     def updated!
       @last_updated = Time.now.utc

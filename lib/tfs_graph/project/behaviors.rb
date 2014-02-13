@@ -3,7 +3,7 @@ module TFSGraph
     module Behaviors
       def create(args)
         obj = super
-        relate :projects, root, obj
+        relate :projects, root, obj.db_object
 
         obj
       end
