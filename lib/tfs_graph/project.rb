@@ -28,7 +28,7 @@ module TFSGraph
       branch.project = self.name
       branch.save!
 
-      @repo.relate(:branches, self, branch)
+      @repo.relate(:branches, db_object, branch.db_object)
     end
 
     def all_activity

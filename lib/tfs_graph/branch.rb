@@ -94,11 +94,11 @@ module TFSGraph
       changeset.branch_path = self.path
       changeset.save!
 
-      @repo.relate(:changesets, self, changeset)
+      @repo.relate(:changesets, self.db_object, changeset.db_object)
     end
 
     def add_child(changeset)
-      @repo.relate(:child, self, changeset)
+      @repo.relate(:child, self.db_object, changeset.db_object)
     end
 
     def changesets

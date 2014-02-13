@@ -39,11 +39,11 @@ module TFSGraph
     def created
       return nil unless @created
       return @created unless @created.is_a? String
-      @created = DateTime.parse @created
+      @created = Time.parse @created
     end
 
     def add_child(changeset)
-      @repo.relate(:child, self, changeset)
+      @repo.relate(:child, self.db_object, changeset.db_object)
     end
 
     def next
