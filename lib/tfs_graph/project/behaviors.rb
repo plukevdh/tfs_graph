@@ -14,7 +14,7 @@ module TFSGraph
 
       def find_by_name(name)
         project = all.detect {|p| p.name == name }
-        raise TFSGraph::Repository::NotFound, "No project found for #{name}" if project.nil?
+        raise Repository::NotFound, "No project found for #{name}" if project.nil?
 
         project
       end
