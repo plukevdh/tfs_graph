@@ -26,7 +26,6 @@ module TFSGraph
     ARCHIVED_FLAGS = ["Archive"]
     RELEASE_MATCHER = /^(.+)-r(\d+)-(\d+)$/i
 
-    alias_method :id, :internal_id
     act_as_entity
 
     def initialize(repo, args)
@@ -153,7 +152,7 @@ module TFSGraph
     def as_json(options={})
       results = super
       results[:related_branches] = related_branches
-      results[:id] = internal_id
+      results[:id] = id
 
       results
     end

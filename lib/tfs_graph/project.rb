@@ -9,7 +9,6 @@ module TFSGraph
       last_updated: {type: DateTime, default: NeverUpdated}
     }
 
-    alias_method :id, :internal_id
     act_as_entity
 
     def <=>(other)

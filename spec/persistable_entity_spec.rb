@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'tfs_graph/repository'
 require 'tfs_graph/repository_registry'
 require 'tfs_graph/persistable_entity'
 
@@ -24,12 +25,12 @@ describe TFSGraph::PersistableEntity do
       Given { repo.should_receive(:save).with(entity).and_return { entity.persist flexmock(id: 1) } }
       When { entity.save! }
       Then { entity.should be_persisted }
-      And { entity.internal_id.should == 1 }
+      And { entity.id.should == 1 }
     end
 
     context "can convert to a hash" do
       When(:result) { entity.to_hash }
-      Then { result.keys.should == entity.send(:schema).keys }
+      Then { result.keys.should == (entity.send(:schema).keys << :id).uniq }
     end
 
     context "can get repo for self" do

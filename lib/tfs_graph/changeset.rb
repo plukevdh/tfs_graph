@@ -33,7 +33,7 @@ module TFSGraph
     end
 
     def id
-      @id.to_i
+      @id.to_i unless @id.nil?
     end
 
     def created
