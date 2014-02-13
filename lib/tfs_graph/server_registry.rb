@@ -21,10 +21,6 @@ module TFSGraph
       reset!
     end
 
-    def server(server)
-      @server = server
-    end
-
     def redis(url: DEFAULT_REDIS[:url], namespace: DEFAULT_REDIS[:namespace])
       return @redis unless @redis.nil?
 

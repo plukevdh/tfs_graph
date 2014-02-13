@@ -16,9 +16,9 @@ module TFSGraph
 
     NotFound = Class.new(RuntimeError)
 
-    def initialize(type, server)
+    def initialize(type)
       @type = type
-      @server = server
+
       add_behavior self, constantize("#{type}::Behaviors")
     end
 

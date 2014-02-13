@@ -4,7 +4,7 @@ require 'tfs_graph/repository'
 module TFSGraph
   class Repository
     class RelatedRepository < Repository
-      def initialize(type, server)
+      def initialize(type)
         super
         Related.redis = ServerRegistry.redis
       end
