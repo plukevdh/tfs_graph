@@ -26,6 +26,19 @@ module TFSGraph
       rebuild find_native(id)
     end
 
+    def exists?(id)
+      begin
+        find_native(id)
+        true
+      rescue NotFound
+        false
+      end
+    end
+
+    def related?(node1, node2, type)
+      node1.rels(dir: :outgoing, between: node2, type: type).any?
+    end
+
     def save(object)
       db_object = object.persisted? ? update(object) : persist(object)
       object.persist db_object

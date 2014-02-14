@@ -50,7 +50,7 @@ describe "Neo4j repo integration" do
     end
 
     context "throws not found error if id not found" do
-      When(:result) { project_repo.find 123 }
+      When(:result) { project_repo.find 999 }
       Then { result.should have_failed(TFSGraph::Repository::NotFound)}
     end
 
@@ -178,6 +178,7 @@ describe "Neo4j repo integration" do
 
             context "branch can get it's root node" do
               When(:root) { branch.root_changeset }
+              Then { root.should_not be_nil }
               Then { root.id.should eq(1230) }
             end
 

@@ -5,13 +5,15 @@ module TFSGraph
   class Repository
     class Neo4jRepository < Repository
       def find_native(id)
-        node = Neo4j::Label.find_nodes(type.base_class_name.to_sym, :id, id).to_a.first
+        node = Neo4j::Label.query(type.base_class_name.to_sym, conditions: {id: id}).to_a.first
+        node ||= find_by_neo_id(id)
 
         raise NotFound, id unless node
         node
       end
 
-      def find_by(property=:id, value)
+      def find_by_neo_id(id)
+        Neo4j::Node.load(id)
       end
 
       def root
@@ -19,7 +21,7 @@ module TFSGraph
       end
 
       def relate(relationship, parent, child)
-        Neo4j::Relationship.create relationship, parent, child
+        Neo4j::Relationship.create relationship, parent, child unless related?(parent, child, relationship)
       end
 
       def get_nodes(entity, direction, relation, type)
@@ -29,7 +31,7 @@ module TFSGraph
       end
 
       def get_relation(entity, direction, relation)
-        entity.rels(dir: direction.to_sym, type: relation.to_sym).to_a
+        entity.rels(dir: direction.to_sym, type: relation.to_sym).first
       end
 
       def get_nodes_for(relation, type)
