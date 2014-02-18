@@ -1,4 +1,4 @@
-require 'related'
+require 'redis-namespace'
 
 module TFSGraph
   class ServerRegistry
