@@ -20,8 +20,11 @@ describe "Neo4j repo integration" do
     sesh.start
   end
 
-  after :all do
-    Neo4j::Session.current.shutdown
+  after :each do
+    sesh = Neo4j::Session.current
+
+    # dump all
+    sesh.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r|
