@@ -17,7 +17,11 @@ module TFSGraph
       end
 
       def root
-        @root ||= Neo4j::Node.create({name: "Root node"}, :root)
+        @root ||= begin
+          node = Neo4j::Label.find_all_nodes(:root).first
+          node = Neo4j::Node.create({name: "Root node"}, :root) if node.nil?
+          node
+        end
       end
 
       def relate(relationship, parent, child)
