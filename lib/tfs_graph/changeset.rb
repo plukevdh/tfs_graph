@@ -63,7 +63,7 @@ module TFSGraph
     %w(merges merged).each do |type|
       directon = (type == "merges") ? :outgoing : :incoming
       define_method type do
-        get_merges_for @repo.get_relation(db_object, directon, :merges)
+        @repo.get_nodes(db_object, directon, :merges, self.class)
       end
 
       define_method "#{type}_ids" do
@@ -89,11 +89,6 @@ module TFSGraph
     def set_merging_from
       from = merges.max
       self.merge_parent = from.id if from
-    end
-
-    private
-    def get_merges_for(merge)
-      @repo.get_nodes_for(merge, self.class)
     end
   end
 end
