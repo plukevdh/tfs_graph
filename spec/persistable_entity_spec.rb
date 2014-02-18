@@ -22,7 +22,7 @@ describe TFSGraph::PersistableEntity do
     end
 
     context "can be persisted" do
-      Given { repo.should_receive(:save).with(entity).and_return { entity.persist flexmock(id: 1) } }
+      Given { repo.should_receive(:save).with(entity).and_return { entity.persist 1, flexmock(id: 1) } }
       When { entity.save! }
       Then { entity.should be_persisted }
       And { entity.id.should == 1 }

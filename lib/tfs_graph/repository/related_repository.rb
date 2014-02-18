@@ -59,6 +59,10 @@ module TFSGraph
         db_object.save
         db_object
       end
+
+      def decompose_db_object(object)
+        return object.id, object
+      end
     end
   end
 end

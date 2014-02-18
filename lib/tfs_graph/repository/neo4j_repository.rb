@@ -50,7 +50,7 @@ module TFSGraph
         attributes = HashWithIndifferentAccess.new db_object.props
 
         obj = build attributes
-        obj.persist db_object
+        obj.persist *decompose_db_object(db_object)
       end
 
       private
@@ -65,9 +65,13 @@ module TFSGraph
       # update the DB object
       def update(object)
         db_object = object.db_object
+      end
 
         db_object.update_props  object.attributes
         db_object
+      def decompose_db_object(object)
+        return nil, nil unless object
+        return object.neo_id, object
       end
     end
   end

@@ -41,7 +41,7 @@ module TFSGraph
 
     def save(object)
       db_object = object.persisted? ? update(object) : persist(object)
-      object.persist db_object
+      object.persist *decompose_db_object(db_object)
     end
 
     def build(args={})
@@ -52,7 +52,7 @@ module TFSGraph
       attributes = HashWithIndifferentAccess.new db_object.attributes
 
       obj = build attributes
-      obj.persist db_object
+      obj.persist *decompose_db_object(db_object)
     end
 
     def create(args)
