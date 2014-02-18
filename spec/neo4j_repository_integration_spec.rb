@@ -16,8 +16,8 @@ require 'tfs_graph/changeset_merge'
 
 describe "Neo4j repo integration" do
   before :all do
-    sesh = Neo4j::Session.open(:embedded_db, 'spec/tmp/db', auto_commit: true)
-    sesh.start
+    sesh = Neo4j::Session.open(:server_db, 'http://localhost:7474')
+    # sesh.start
   end
 
   after :each do
