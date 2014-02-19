@@ -21,6 +21,13 @@ module TFSGraph
       reset!
     end
 
+    def server(server_obj=nil)
+      return @server if @server && server_obj.nil?
+      raise ArgumentError unless server_obj
+
+      @server = server_obj
+    end
+
     def redis(url: DEFAULT_REDIS[:url], namespace: DEFAULT_REDIS[:namespace])
       return @redis unless @redis.nil?
 
@@ -29,6 +36,10 @@ module TFSGraph
 
     define_singleton_method :redis do |url: DEFAULT_REDIS[:url], namespace: DEFAULT_REDIS[:namespace]|
       instance.redis url: url, namespace: namespace
+    end
+
+    define_singleton_method :server do |server_obj=nil|
+      instance.server server_obj
     end
   end
 end

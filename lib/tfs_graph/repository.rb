@@ -20,6 +20,9 @@ module TFSGraph
       @type = type
 
       add_behavior self, constantize("#{type}::Behaviors")
+
+      # register self as the server type
+      ServerRegistry.server(self)
     end
 
     def find(id)
