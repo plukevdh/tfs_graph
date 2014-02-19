@@ -21,8 +21,14 @@ module TFSGraph
         Related.root
       end
 
+      def session
+        ServerRegistry.redis
+      end
+
       def flush
-        ServerRegistry.redis.flushall
+        session.keys("*").each do |k|
+          redis.del k
+        end
       end
 
       def relate(relationship, parent, child)

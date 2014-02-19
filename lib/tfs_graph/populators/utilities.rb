@@ -4,7 +4,7 @@ module TFSGraph
       include StoreHelpers
 
       def clean
-        ServerRegistry.server.flush
+        flush_all
       end
 
       def finalize

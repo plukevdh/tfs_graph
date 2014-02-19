@@ -7,9 +7,7 @@ module TFSGraph
 
     # flush by key so that we only disturbe our namespace
     def flush_all
-      redis.keys("*").each do |k|
-        redis.del k
-      end
+      ServerRegistry.server.flush
     end
 
     def mark_as_updated(time=nil)
