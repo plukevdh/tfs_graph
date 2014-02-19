@@ -23,7 +23,7 @@ module TFSGraph
 
     def server(server_obj=nil)
       return @server if @server && server_obj.nil?
-      raise ArgumentError unless server_obj
+      raise ArgumentError, "Need to register a server first" unless server_obj
 
       @server = server_obj
     end
