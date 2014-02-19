@@ -7,7 +7,7 @@ module TFSGraph
 
     # flush by key so that we only disturbe our namespace
     def flush_all
-      ServerRegistry.server.flush
+      RepositoryRegistry.project_repository.flush
     end
 
     def mark_as_updated(time=nil)
