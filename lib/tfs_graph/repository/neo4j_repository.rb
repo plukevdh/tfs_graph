@@ -38,25 +38,13 @@ module TFSGraph
       end
 
       def get_nodes(entity, direction, relation, type)
-        entity.nodes(dir: direction.to_sym, type: relation.to_sym).map do |node|
-          type.repository.rebuild node
-        end
-      end
-
-      def get_relation(entity, direction, relation)
-        entity.rels(dir: direction.to_sym, type: relation.to_sym).first
-      end
-
-      def get_nodes_for(relation, type)
-        nodes = []
-
-        Neo4j::Transaction.run do
-          nodes = relation.nodes.map do |node|
+        begin
+          entity.nodes(dir: direction.to_sym, type: relation.to_sym).map do |node|
             type.repository.rebuild node
           end
+        rescue Neo4j::Server::CypherResponse::ResponseError => e
+          []
         end
-
-        nodes
       end
 
       def rebuild(db_object)
