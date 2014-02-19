@@ -22,10 +22,12 @@ module TFSGraph
         merge.join :merges, target, source
 
         # relate the branches as well
-        merge.join :related, source.branch, target.branch
+        if source.branch && target.branch
+          merge.join :related, source.branch, target.branch
 
-        merge.join :included, source.branch, target if source.branch
-        merge.join :included, target.branch, source if target.branch
+          merge.join :included, source.branch, target
+          merge.join :included, target.branch, source
+        end
 
         merge
       rescue TFSGraph::Repository::NotFound => ex
