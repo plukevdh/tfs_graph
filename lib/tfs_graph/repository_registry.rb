@@ -29,7 +29,7 @@ module TFSGraph
     end
 
     def identifier
-      @base_repo.class.name =~ /Related/ ? "redis" : "neo4j"
+      (@base_repo.name =~ /Neo4j/i) ? "neo4j" : "redis"
     end
 
     def type(type)
