@@ -28,8 +28,11 @@ module TFSGraph
       end
     end
 
-    def type(type=nil)
-      return @base_repo if type.nil?
+    def identifier
+      @base_repo.class.name =~ /Related/ ? "redis" : "neo4j"
+    end
+
+    def type(type)
       @base_repo = type
     end
 
