@@ -27,7 +27,7 @@ module TFSGraph
 
       def flush
         session.keys("*").each do |k|
-          redis.del k
+          session.del k
         end
       end
 
