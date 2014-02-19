@@ -28,7 +28,8 @@ module TFSGraph
       end
     end
 
-    def type(type)
+    def type(type=nil)
+      return @base_repo if type.nil?
       @base_repo = type
     end
 
