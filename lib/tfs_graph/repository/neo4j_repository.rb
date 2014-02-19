@@ -16,6 +16,15 @@ module TFSGraph
         Neo4j::Node.load(id)
       end
 
+      def session
+        Neo4j::Session.current
+      end
+
+      def flush
+        @root = nil
+        session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
+      end
+
       def root
         @root ||= begin
           node = Neo4j::Label.find_all_nodes(:root).first

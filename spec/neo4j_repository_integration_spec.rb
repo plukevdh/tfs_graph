@@ -20,14 +20,10 @@ require 'tfs_graph/changeset_merge'
 describe "Neo4j repo integration" do
   before :all do
     sesh = Neo4j::Session.open(:server_db, 'http://localhost:7474')
-    # sesh.start
   end
 
   after :each do
-    sesh = Neo4j::Session.current
-
-    # dump all
-    sesh.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
+    TFSGraph::ServerRegistry.server.flush
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r|

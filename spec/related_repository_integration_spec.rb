@@ -16,10 +16,11 @@ require 'tfs_graph/changeset_merge'
 describe "Related repo integration" do
   before :all do
     TFSGraph::ServerRegistry.register {|r| r.redis url: "redis://localhost:6379", namespace: "test" }
+    TFSGraph::ServerRegistry.server.flush
   end
 
   before(:each) do
-    TFSGraph::ServerRegistry.redis.flushall
+    TFSGraph::ServerRegistry.server.flush
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type TFSGraph::Repository::RelatedRepository }}

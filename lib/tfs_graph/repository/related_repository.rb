@@ -21,6 +21,10 @@ module TFSGraph
         Related.root
       end
 
+      def flush
+        ServerRegistry.redis.flushall
+      end
+
       def relate(relationship, parent, child)
         Related::Relationship.create relationship, parent, child
       end
