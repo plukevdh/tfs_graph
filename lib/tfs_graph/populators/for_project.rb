@@ -12,6 +12,7 @@ module TFSGraph
         branches.map {|branch| collect_changesets(branch) }
 
         branches.each {|branch| collect_merges(branch) }
+        @project.updated!
       end
     end
   end
