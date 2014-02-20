@@ -64,5 +64,10 @@ module TFSGraph
     def inspect
       type
     end
+
+    private
+    def normalize(attrs)
+      HashWithIndifferentAccess.new attrs
+    end
   end
 end

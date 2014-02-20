@@ -48,7 +48,7 @@ module TFSGraph
       end
 
       def rebuild(db_object)
-        attributes = HashWithIndifferentAccess.new db_object.props
+        attributes = normalize db_object.props
 
         obj = build attributes
         obj.persist *decompose_db_object(db_object)
