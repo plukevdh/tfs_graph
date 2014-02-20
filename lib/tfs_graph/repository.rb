@@ -16,14 +16,35 @@ module TFSGraph
 
     NotFound = Class.new(RuntimeError)
 
-    def initialize(type, server)
+    def initialize(type)
       @type = type
-      @server = server
+
       add_behavior self, constantize("#{type}::Behaviors")
+
+      # register self as the server type
+      ServerRegistry.server(self)
     end
 
-    def save(object, db_object)
-      object.persist db_object
+    def find(id)
+      rebuild find_native(id)
+    end
+
+    def exists?(id)
+      begin
+        find_native(id)
+        true
+      rescue NotFound
+        false
+      end
+    end
+
+    def related?(node1, node2, type)
+      node1.rels(dir: :outgoing, between: node2, type: type).any?
+    end
+
+    def save(object)
+      db_object = object.persisted? ? update(object) : persist(object)
+      object.persist *decompose_db_object(db_object)
     end
 
     def build(args={})
@@ -34,7 +55,7 @@ module TFSGraph
       attributes = HashWithIndifferentAccess.new db_object.attributes
 
       obj = build attributes
-      obj.persist db_object
+      obj.persist *decompose_db_object(db_object)
     end
 
     def create(args)

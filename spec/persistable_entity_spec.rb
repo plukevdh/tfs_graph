@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+require 'tfs_graph/repository'
 require 'tfs_graph/repository_registry'
 require 'tfs_graph/persistable_entity'
 
@@ -21,15 +22,15 @@ describe TFSGraph::PersistableEntity do
     end
 
     context "can be persisted" do
-      Given { repo.should_receive(:save).with(entity).and_return { entity.persist flexmock(id: 1) } }
+      Given { repo.should_receive(:save).with(entity).and_return { entity.persist 1, flexmock(id: 1) } }
       When { entity.save! }
       Then { entity.should be_persisted }
-      And { entity.internal_id.should == 1 }
+      And { entity.id.should == 1 }
     end
 
     context "can convert to a hash" do
       When(:result) { entity.to_hash }
-      Then { result.keys.should == entity.send(:schema).keys }
+      Then { result.keys.should == (entity.send(:schema).keys << :id).uniq }
     end
 
     context "can get repo for self" do
@@ -40,11 +41,26 @@ describe TFSGraph::PersistableEntity do
 
   context "branch" do
     it_should_behave_like "an entity" do
-      Given(:entity) { TFSGraph::Branch.new(repo, name: "Demo") }
+      Given(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: Time.now) }
 
       context "has properties" do
         Then { entity.name.should == "Demo" }
         And { entity.archived.should == "false" }
+        And { entity.created.should be_a Time }
+      end
+    end
+
+    context "time converter" do
+      Given(:time) { Time.now }
+
+      context "can rebuild time from unixtime" do
+        When(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: time.to_i) }
+        Then { entity.created.to_i.should eq(time.to_i) }
+      end
+
+      context "can rebuild time from Time" do
+        When(:entity) { TFSGraph::Branch.new(repo, name: "Demo", created: time) }
+        Then { entity.created.to_i.should eq(time.to_i) }
       end
     end
   end
@@ -67,7 +83,7 @@ describe TFSGraph::PersistableEntity do
 
       context "has properties" do
         Then { entity.name.should == "FooBarge" }
-        And { entity.last_updated.should eq(TFSGraph::Project::NeverUpdated) }
+        And { entity.last_updated.should be_nil }
       end
     end
   end

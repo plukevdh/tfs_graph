@@ -2,23 +2,20 @@ require 'tfs_graph/persistable_entity'
 
 module TFSGraph
   class Project < PersistableEntity
-    NeverUpdated = Class.new
-
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: DateTime, default: NeverUpdated}
+      last_updated: {type: Time, default: nil}
     }
 
-    alias_method :id, :internal_id
     act_as_entity
 
     def <=>(other)
       id <=> other.id
     end
 
-    def last_updated
-      @last_updated || NeverUpdated
-    end
+    # def last_updated
+    #   @last_updated || NeverUpdated
+    # end
 
     def updated!
       @last_updated = Time.now.utc
@@ -29,7 +26,7 @@ module TFSGraph
       branch.project = self.name
       branch.save!
 
-      @repo.relate(:branches, self, branch)
+      @repo.relate(:branches, db_object, branch.db_object)
     end
 
     def all_activity

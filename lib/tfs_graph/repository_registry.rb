@@ -28,12 +28,12 @@ module TFSGraph
       end
     end
 
-    def type(type)
-      @base_repo = type
+    def identifier
+      (@base_repo.name =~ /Neo4j/i) ? "neo4j" : "redis"
     end
 
-    def server(path)
-      @server = path
+    def type(type)
+      @base_repo = type
     end
 
     TYPES.each do |type|
@@ -41,7 +41,7 @@ module TFSGraph
         existing = instance_variable_get repo_memo(type)
         return existing unless existing.nil?
 
-        repo = @base_repo.new constantize("TFSGraph::#{type.capitalize}"), @server
+        repo = @base_repo.new constantize("TFSGraph::#{type.capitalize}")
 
         instance_variable_set(repo_memo(type), repo)
         repo

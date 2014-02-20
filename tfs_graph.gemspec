@@ -20,6 +20,7 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "ruby_tfs"
   spec.add_dependency "activesupport", '~> 4.0'
+  spec.add_dependency 'redis-namespace'
 
   spec.add_development_dependency "bundler", "~> 1.3"
   spec.add_development_dependency "rake"

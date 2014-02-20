@@ -51,15 +51,10 @@ module TFSGraph
 
     def persist(changesets)
       changesets.map do |attrs|
-        begin
-          changeset = RepositoryRegistry.changeset_repository.build attrs
-          @branch.add_changeset changeset
+        changeset = RepositoryRegistry.changeset_repository.build attrs
+        @branch.add_changeset changeset
 
-          changeset
-        rescue Related::ValidationsFailed => ex
-          # puts ex.message
-          next
-        end
+        changeset
       end.compact
     end
   end

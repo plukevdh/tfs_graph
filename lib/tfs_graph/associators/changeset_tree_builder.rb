@@ -7,7 +7,7 @@ module TFSGraph
           parent = (i == 0) ? branch : changesets[i-1]
 
           if parent.is_a? TFSGraph::Changeset
-            changeset.parent = parent.internal_id
+            changeset.parent = parent.id
             changeset.save!
           end
 

@@ -9,7 +9,7 @@ module TFSGraph
     SCHEMA = {
       comment: {key: "Comment", type: String},
       committer: {key: "Committer", converter: ->(name) { base_username(name) }, type: String},
-      created: {key: "CreationDate", type: DateTime},
+      created: {key: "CreationDate", type: Time},
       id: {key: "Id", type: Integer},
       branch_path: {type: String, default: nil},
       # tags: {type: Array, default: []},
@@ -33,17 +33,17 @@ module TFSGraph
     end
 
     def id
-      @id.to_i
+      @id.to_i unless @id.nil?
     end
 
     def created
       return nil unless @created
       return @created unless @created.is_a? String
-      @created = DateTime.parse @created
+      @created = Time.parse @created
     end
 
     def add_child(changeset)
-      @repo.relate(:child, self, changeset)
+      @repo.relate(:child, self.db_object, changeset.db_object)
     end
 
     def next
@@ -63,7 +63,7 @@ module TFSGraph
     %w(merges merged).each do |type|
       directon = (type == "merges") ? :outgoing : :incoming
       define_method type do
-        get_merges_for @repo.get_relation(db_object, directon, :merges)
+        @repo.get_nodes(db_object, directon, :merges, self.class)
       end
 
       define_method "#{type}_ids" do
@@ -89,11 +89,6 @@ module TFSGraph
     def set_merging_from
       from = merges.max
       self.merge_parent = from.id if from
-    end
-
-    private
-    def get_merges_for(merge)
-      @repo.get_nodes_for(merge, self.class)
     end
   end
 end

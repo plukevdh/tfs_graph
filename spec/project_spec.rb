@@ -7,7 +7,7 @@ describe TFSGraph::Project do
   Given(:project) { TFSGraph::Project.new(repo, {name: "Fake Project"}) }
 
   context "last updated is not available if never updated" do
-    Then { project.last_updated.should == TFSGraph::Project::NeverUpdated }
+    Then { project.last_updated.should == nil }
   end
 
   context "last updated is a date if set" do
@@ -21,7 +21,7 @@ describe TFSGraph::Project do
     after { Timecop.return }
 
     Given(:project) { TFSGraph::Project.new(repo, {name: "Fake Project"}) }
-    Given { repo.should_receive(:save).with(project).and_return { project.persist flexmock(id: 1) }}
+    Given { repo.should_receive(:save).with(project).and_return { project.persist 1, flexmock(id: 1) }}
     When { project.updated! }
     Then { project.last_updated.should eq(Time.now.utc) }
     And { project.should be_persisted }

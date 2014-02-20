@@ -11,7 +11,7 @@ module TFSGraph
       project: {converter: ->(path) { branch_project(path) }, key: "Path", type: String},
       name: {converter: ->(path) { branch_path_to_name(path) }, key: "Path", type: String},
       root: {converter: ->(path) { repath_archive(server_path_to_odata_path(path)) if path }, key: "ParentBranch", type: String},
-      created: {key: "DateCreated", type: DateTime},
+      created: {key: "DateCreated", type: Time},
       type: {default: "Feature", type: Integer},
       archived: {default: false, type: String},
       hidden: {default: false, type: String}
@@ -26,7 +26,6 @@ module TFSGraph
     ARCHIVED_FLAGS = ["Archive"]
     RELEASE_MATCHER = /^(.+)-r(\d+)-(\d+)$/i
 
-    alias_method :id, :internal_id
     act_as_entity
 
     def initialize(repo, args)
@@ -95,11 +94,11 @@ module TFSGraph
       changeset.branch_path = self.path
       changeset.save!
 
-      @repo.relate(:changesets, self, changeset)
+      @repo.relate(:changesets, self.db_object, changeset.db_object)
     end
 
     def add_child(changeset)
-      @repo.relate(:child, self, changeset)
+      @repo.relate(:child, self.db_object, changeset.db_object)
     end
 
     def changesets
@@ -153,7 +152,7 @@ module TFSGraph
     def as_json(options={})
       results = super
       results[:related_branches] = related_branches
-      results[:id] = internal_id
+      results[:id] = id
 
       results
     end

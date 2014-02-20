@@ -16,10 +16,11 @@ require 'tfs_graph/changeset_merge'
 describe "Related repo integration" do
   before :all do
     TFSGraph::ServerRegistry.register {|r| r.redis url: "redis://localhost:6379", namespace: "test" }
+    TFSGraph::ServerRegistry.server.flush
   end
 
   before(:each) do
-    TFSGraph::ServerRegistry.redis.flushall
+    TFSGraph::ServerRegistry.server.flush
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type TFSGraph::Repository::RelatedRepository }}
@@ -186,7 +187,7 @@ describe "Related repo integration" do
       Given(:branch) { foo.branches.first }
       Given!(:changesets) {
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna let you down.", id: "123#{i}".to_i, committer: "John Gray the #{i}th", created: i.days.ago)
           branch.add_changeset(cs)
           cs
         end
@@ -194,7 +195,7 @@ describe "Related repo integration" do
       Given!(:noise) {
         # some extra noise
         3.times.map do |i|
-          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: "#{i.days.ago}")
+          cs = cs_repo.create(comment: "Never gonna give you up.", id: "323#{i}".to_i, commiter: "Jim Beam", created: i.days.ago)
           foo.branches[1].add_changeset(cs)
           cs
         end
@@ -279,13 +280,13 @@ describe "Related repo integration" do
           context "related branches" do
             When(:related) { child.related_branches }
             Then { related.size.should eq(1) }
-            And { related.first.should == branch.internal_id }
+            And { related.first.should == branch.id }
           end
 
           context "json reports related branches" do
             When(:data) { JSON.parse child.to_json, symbolize_names: true }
             Then { data[:related_branches].size.should eq(1) }
-            And { data[:related_branches].should match_array([branch.internal_id]) }
+            And { data[:related_branches].should match_array([branch.id]) }
           end
 
           context "get absolute root" do

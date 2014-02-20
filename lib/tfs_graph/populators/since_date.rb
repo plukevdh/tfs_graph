@@ -17,6 +17,7 @@ module TFSGraph
           end
 
           branches.each {|branch| collect_merges(branch) }
+          project.updated!
         end
 
         finalize

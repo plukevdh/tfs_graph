@@ -16,17 +16,18 @@ module TFSGraph
       begin
         merge = new(attrs)
 
-        # this will throw an error if one of the relations is not found
-        # this is the desired condition as it will throw out the merge if there aren't two endpoints found
         target, source = merge.get_relations
+        return nil unless target.persisted? and source.persisted?
 
         merge.join :merges, target, source
 
         # relate the branches as well
-        merge.join :related, source.branch, target.branch
+        if source.branch && target.branch
+          merge.join :related, source.branch, target.branch
 
-        merge.join :included, source.branch, target
-        merge.join :included, target.branch, source
+          merge.join :included, source.branch, target
+          merge.join :included, target.branch, source
+        end
 
         merge
       rescue TFSGraph::Repository::NotFound => ex
@@ -47,7 +48,7 @@ module TFSGraph
     end
 
     def join(relation, target, source)
-      repo.relate(relation, target, source)
+      repo.relate(relation, target.db_object, source.db_object)
     end
 
     private

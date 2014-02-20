@@ -6,10 +6,13 @@ module TFSGraph
     extend ActiveSupport::Concern
 
     module ClassMethods
-      private
       def base_class_name
         name.demodulize.downcase
       end
+    end
+
+    def base_class_name
+      self.class.base_class_name
     end
 
     private
@@ -19,10 +22,6 @@ module TFSGraph
 
     def constantize(string)
       string.constantize
-    end
-
-    def base_class_name
-      self.class.base_class_name
     end
   end
 end

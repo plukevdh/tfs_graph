@@ -3,7 +3,7 @@ module TFSGraph
     module Behaviors
       def create(args)
         obj = super
-        relate :projects, root, obj
+        relate :projects, root, obj.db_object
 
         obj
       end
@@ -14,7 +14,7 @@ module TFSGraph
 
       def find_by_name(name)
         project = all.detect {|p| p.name == name }
-        raise TFSGraph::Repository::NotFound, "No project found for #{name}" if project.nil?
+        raise Repository::NotFound, "No project found for #{name}" if project.nil?
 
         project
       end

@@ -13,16 +13,14 @@ require 'tfs_graph/repository_registry'
 
 describe TFSGraph::RepositoryRegistry do
   Given(:repo) { flexmock(TFSGraph::Repository) }
-  Given(:server) { flexmock("server") }
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r|
     r.type repo
-    r.server server
   }}
 
   shared_examples "a repository builder" do |type|
     Given {
       repo.should_receive(:new).
-        with(Object.const_get("TFSGraph::#{type.capitalize}"), server).pass_thru
+        with(Object.const_get("TFSGraph::#{type.capitalize}")).pass_thru
     }
     When(:entity_repo) { register.send "#{type}_repository" }
     Then { entity_repo.should be_a(TFSGraph::Repository) }

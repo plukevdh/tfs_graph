@@ -4,31 +4,31 @@ require 'tfs_graph/repository'
 module TFSGraph
   class Repository
     class RelatedRepository < Repository
-      def initialize(type, server)
+      def initialize(type)
         super
         Related.redis = ServerRegistry.redis
       end
 
-      # updates or save the DB object
-      def save(object)
-        db_object = object.persisted? ? update(object) : persist(object)
-        super object, db_object
-      end
-
-      def find(id)
+      def find_native(id)
         begin
-          rebuild find_native(id)
+          Related::Node.find(id)
         rescue Related::NotFound => e
           raise TFSGraph::Repository::NotFound, e.message
         end
       end
 
-      def find_native(id)
-        Related::Node.find(id)
-      end
-
       def root
         Related.root
+      end
+
+      def session
+        ServerRegistry.redis
+      end
+
+      def flush
+        session.keys("*").each do |k|
+          session.del k
+        end
       end
 
       def relate(relationship, parent, child)
@@ -68,6 +68,10 @@ module TFSGraph
 
         db_object.save
         db_object
+      end
+
+      def decompose_db_object(object)
+        return object.id, object
       end
     end
   end
