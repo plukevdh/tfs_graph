@@ -11,7 +11,7 @@ module TFSGraph
     attr_accessor :db_object, :id
 
     def self.repository
-      TFSGraph::RepositoryRegistry.instance.send "#{base_class_name}_repository"
+      TFSGraph::RepositoryRegistry.instance.send "#{base_class_name.downcase}_repository"
     end
 
     def initialize(repo, args)

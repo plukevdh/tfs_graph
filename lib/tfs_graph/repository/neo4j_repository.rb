@@ -5,7 +5,7 @@ module TFSGraph
   class Repository
     class Neo4jRepository < Repository
       def find_native(id)
-        node = Neo4j::Label.query(type.base_class_name.to_sym, conditions: {id: id}).to_a.first
+        node = Neo4j::Label.query(type.base_class_name.downcase.to_sym, conditions: {id: id}).to_a.first
         node ||= find_by_neo_id(id)
 
         raise NotFound, id unless node
@@ -61,7 +61,7 @@ module TFSGraph
       # create the DB object
       def persist(object)
         rescue_format_issues(object) do
-          Neo4j::Node.create(object.to_hash, object.base_class_name)
+          Neo4j::Node.create(object.to_hash, object.base_class_name.downcase)
         end
       end
 

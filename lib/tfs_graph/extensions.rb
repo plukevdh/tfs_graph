@@ -7,7 +7,7 @@ module TFSGraph
 
     module ClassMethods
       def base_class_name
-        name.demodulize.downcase
+        name.demodulize
       end
     end
 
