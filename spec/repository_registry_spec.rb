@@ -4,10 +4,6 @@ require "tfs_graph/branch"
 require "tfs_graph/changeset"
 require "tfs_graph/project"
 
-require "tfs_graph/branch/behaviors"
-require "tfs_graph/changeset/behaviors"
-require "tfs_graph/project/behaviors"
-
 require 'tfs_graph/repository'
 require 'tfs_graph/repository_registry'
 
@@ -17,10 +13,20 @@ describe TFSGraph::RepositoryRegistry do
     r.type repo
   }}
 
+  def constantize(string)
+    Object.const_get(string)
+  end
+
+  class TFSGraph::Behaviors::Repository
+    module Branch; end
+    module Project; end
+    module Changeset; end
+  end
+
   shared_examples "a repository builder" do |type|
     Given {
       repo.should_receive(:new).
-        with(Object.const_get("TFSGraph::#{type.capitalize}")).pass_thru
+        with(constantize("TFSGraph::#{type.capitalize}")).pass_thru
     }
     When(:entity_repo) { register.send "#{type}_repository" }
     Then { entity_repo.should be_a(TFSGraph::Repository) }

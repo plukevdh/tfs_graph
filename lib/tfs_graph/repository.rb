@@ -5,9 +5,7 @@ require 'tfs_graph/project'
 require 'tfs_graph/branch'
 require 'tfs_graph/changeset'
 
-require 'tfs_graph/project/behaviors'
-require 'tfs_graph/branch/behaviors'
-require 'tfs_graph/changeset/behaviors'
+require 'tfs_graph/behaviors'
 
 module TFSGraph
   class Repository
@@ -19,7 +17,7 @@ module TFSGraph
     def initialize(type)
       @type = type
 
-      add_behavior self, constantize("#{type}::Behaviors")
+      add_behavior self, constantize("TFSGraph::Behaviors::#{self.base_class_name}::#{type.base_class_name}")
 
       # register self as the server type
       ServerRegistry.server(self)

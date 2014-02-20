@@ -8,10 +8,6 @@ require 'tfs_graph/branch'
 require 'tfs_graph/project'
 require 'tfs_graph/changeset'
 
-require "tfs_graph/branch/behaviors"
-require "tfs_graph/changeset/behaviors"
-require "tfs_graph/project/behaviors"
-
 describe TFSGraph::Repository do
   context "Related" do
     before :all do
