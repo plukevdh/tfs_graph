@@ -30,16 +30,13 @@ module TFSGraph
     end
 
     def all_activity
-      branches.map {|b| b.changesets }.flatten
+      @repo.activity(self)
     end
 
     def all_activity_by_date(limiter=nil)
       raise InvalidArgument("parameter must be a Date") unless limiter.nil? || limiter.is_a?(Time)
 
-      activity = all_activity
-      activity = activity.select {|c| c.created > limiter } unless limiter.nil?
-
-      activity.group_by(&:formatted_created)
+      @repo.activity_by_date(self, limiter).group_by(&:formatted_created)
     end
 
     def active_branches

@@ -54,6 +54,11 @@ module TFSGraph
         obj.persist *decompose_db_object(db_object)
       end
 
+      def rebuild_from_query(attrs)
+        obj = build normalize(attrs)
+        obj.persist obj.id, nil
+      end
+
       private
       # persist and update both expose the DB object from Redis/Related
       # make methods private so we have to use save to persist
