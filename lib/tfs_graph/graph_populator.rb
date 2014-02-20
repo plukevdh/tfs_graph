@@ -30,6 +30,10 @@ module TFSGraph
       def populate_all_from_time(time)
         populate_graph(Populators::SinceDate, time)
       end
+
+      def update_branch(project, branch)
+        populate_graph(Populators::ForBranch, project, branch)
+      end
     end
   end
 end
