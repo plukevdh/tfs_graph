@@ -24,7 +24,7 @@ module TFSGraph
 
       hash.each do |k,v|
         next unless v.is_a? Time
-        hash[k] = v.to_i
+        hash[k] = v.utc.to_i
       end
 
       hash
