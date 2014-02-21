@@ -17,8 +17,9 @@ group :test, :development do
   gem "related", git: "https://github.com/plukevdh/related.git", branch: "namespace_fix"
   gem 'timecop'
 
+  gem 'neo4j-core', git: "https://github.com/plukevdh/neo4j-core.git"
+
   platforms :jruby do
-    gem 'neo4j-core', git: "https://github.com/plukevdh/neo4j-core.git"
     gem 'neo4j-community'
   end
 end
