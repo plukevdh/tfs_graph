@@ -47,6 +47,14 @@ module TFSGraph
       branches_with_hidden.reject(&:hidden?)
     end
 
+    def branches_for_root(root)
+      @repo.branches_for_root(self, root)
+    end
+
+    def changesets_for_root(root)
+      @repo.changesets_for_root(self, root)
+    end
+
     def branches_with_hidden
       @repo.get_nodes(db_object, :outgoing, :branches, Branch)
     end

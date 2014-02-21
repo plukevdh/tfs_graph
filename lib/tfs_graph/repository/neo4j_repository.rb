@@ -54,9 +54,9 @@ module TFSGraph
         obj.persist *decompose_db_object(db_object)
       end
 
-      def rebuild_from_query(attrs)
+      def rebuild_from_query(attrs, id)
         obj = build normalize(attrs)
-        obj.persist obj.id, nil
+        obj.persist id, nil
       end
 
       private

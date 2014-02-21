@@ -20,6 +20,13 @@ module TFSGraph
           project
         end
 
+        def branches_for_root(project, root)
+          project.branches.select {|b| b.root == branch.path || b.original_path == branch.path}
+        end
+
+        def changesets_for_root(project, root)
+          branches_for_root(project, root).map(&:changesets).flatten.sort
+        end
 
         def activity(project)
           project.branches.map {|b| b.changesets }.flatten
