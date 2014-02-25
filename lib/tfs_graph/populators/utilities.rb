@@ -22,12 +22,7 @@ module TFSGraph
 
       def collect_changesets(branch, method=:cache_all, *args)
         changesets = ChangesetStore.new(branch).send(method, *args)
-        generate_branch_tree(branch)
-        changesets.compact
-      end
-
-      def generate_branch_tree(branch)
-        ChangesetTreeBuilder.to_tree branch
+        ChangesetTreeBuilder.to_tree(branch, changesets).compact
       end
 
       def collect_merges(branch)

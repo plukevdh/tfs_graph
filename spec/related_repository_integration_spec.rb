@@ -200,7 +200,7 @@ describe "Related repo integration" do
           cs
         end
       }
-      Given { TFSGraph::ChangesetTreeBuilder.to_tree branch }
+      Given { TFSGraph::ChangesetTreeBuilder.to_tree branch, changesets }
 
       context "paths are set" do
         When(:cs) { branch.changesets }

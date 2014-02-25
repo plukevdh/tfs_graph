@@ -80,15 +80,5 @@ module TFSGraph
 
       results
     end
-
-    def set_merging_to
-      into = merged.max
-      self.merge_parent = into.id if into
-    end
-
-    def set_merging_from
-      from = merges.max
-      self.merge_parent = from.id if from
-    end
   end
 end
