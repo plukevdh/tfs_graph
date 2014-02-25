@@ -10,6 +10,7 @@ module TFSGraph
       def normalize(item, branch)
         item = super(item)
         item[:branch_path] = branch
+        item[:comment] = item[:comment].gsub(/\\+/, "|")
         item
       end
 

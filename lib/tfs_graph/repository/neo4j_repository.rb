@@ -65,25 +65,13 @@ module TFSGraph
 
       # create the DB object
       def persist(object)
-        rescue_format_issues(object) do
-          Neo4j::Node.create(object.to_hash, object.base_class_name.downcase)
-        end
+        Neo4j::Node.create(object.to_hash, object.base_class_name.downcase)
       end
 
       # update the DB object
       def update(object)
-        rescue_format_issues(object) do
-          object.db_object.update_props object.attributes
-          object.db_object
-        end
-      end
-
-      def rescue_format_issues(object, &block)
-        begin
-          block.call
-        rescue Neo4j::Server::CypherResponse::ResponseError => e
-          puts "Could not update #{object.inspect}: #{e.message}."
-        end
+        object.db_object.update_props object.attributes
+        object.db_object
       end
 
       def get_id(object)
