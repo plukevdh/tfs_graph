@@ -45,6 +45,10 @@ module TFSGraph
       @archived.to_s
     end
 
+    def hidden
+      @hidden.to_s
+    end
+
     def archived?
       archived.to_s == "true"
     end
