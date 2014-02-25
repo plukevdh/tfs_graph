@@ -51,7 +51,7 @@ module TFSGraph
         attributes = normalize db_object.props
 
         obj = build attributes
-        obj.persist *decompose_db_object(db_object)
+        obj.persist get_id(db_object), db_object
       end
 
       def rebuild_from_query(attrs, id)
@@ -86,9 +86,9 @@ module TFSGraph
         end
       end
 
-      def decompose_db_object(object)
-        return nil, nil unless object
-        return object.neo_id, object
+      def get_id(object)
+        return 0 if object.nil?
+        object.neo_id
       end
     end
   end

@@ -70,8 +70,9 @@ module TFSGraph
         db_object
       end
 
-      def decompose_db_object(object)
-        return object.id, object
+      def get_id(object)
+        return 0 if object.nil?
+        object.id
       end
     end
   end
