@@ -13,8 +13,8 @@ module TFSGraph
       id: {key: "Id", type: Integer},
       branch_path: {type: String, default: nil},
       # tags: {type: Array, default: []},
-      parent: {type: Integer, default: nil},
-      merge_parent: {type: Integer, default: nil}
+      parent: {type: Integer, default: 0},
+      merge_parent: {type: Integer, default: 0}
     }
 
     act_as_entity
