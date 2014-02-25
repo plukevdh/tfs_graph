@@ -68,6 +68,10 @@ module TFSGraph
         branches_with_hidden.select {|b| b.send "#{type}?" }
       end
 
+      define_method "active_#{type}s" do
+        active_branches.select {|b| b.send("#{type}?") }
+      end
+
       define_method "archived_#{type}s" do
         branches.select {|b| b.send("#{type}?") && b.archived? }
       end
