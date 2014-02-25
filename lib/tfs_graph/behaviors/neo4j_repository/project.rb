@@ -20,8 +20,8 @@ module TFSGraph
           rebuild project
         end
 
-        def branches_for_root(project, branch)
-          branches = session.query "MATCH (p:project {name: {project}})-[:branches]->(b:branch {hidden: false}) WHERE b.original_path = {path} OR b.root = {path} RETURN b as `branch`, ID(b) as `neo_id`",
+        def branches_for_root(project, branch, archived=false, hidden=false)
+          branches = session.query "#{root_branch_query(archived, hidden)} RETURN b as `branch`, ID(b) as `neo_id`",
             project: project.name,
             path: branch.path
 
@@ -30,8 +30,8 @@ module TFSGraph
           end
         end
 
-        def changesets_for_root(project, branch)
-          changesets = session.query 'MATCH (p:project {name: {project}})-[:branches]->(b:branch {hidden: false}) WHERE b.original_path = {path} OR b.root = {path} MATCH b-[:changesets]->(c:changeset) RETURN c AS `changeset`, ID(b) as `neo_id` ORDER BY c.id',
+        def changesets_for_root(project, branch, archived=false, hidden=false)
+          changesets = session.query "#{root_branch_query(archived, hidden)} MATCH b-[:changesets]->(c:changeset) RETURN c AS `changeset`, ID(b) as `neo_id` ORDER BY c.id",
             project: project.name,
             path: branch.path
 
@@ -56,6 +56,11 @@ module TFSGraph
           changesets.each_slice(2).map do |data,id|
             RepositoryRegistry.changeset_repository.rebuild_from_query data[:changeset]['data'], id[:neo_id]
           end
+        end
+
+        private
+        def root_branch_query(include_archived=true, include_hidden=true)
+          "MATCH (p:project {name: {project}})-[:branches]->(b:branch {archived: '#{include_archived}', hidden: '#{include_hidden}'}) WHERE b.original_path = {path} OR b.root = {path}"
         end
       end
     end
