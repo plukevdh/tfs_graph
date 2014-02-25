@@ -11,8 +11,8 @@ module TFSGraph
       def populate
         new_changesets = collect_changesets @branch, :cache_since_last_update
 
-        collect_merges(new_changesets)
-        BranchAssociator.associate(new_changesets)
+        collect_merges(@branch)
+        BranchAssociator.associate(new_changesets.flatten)
       end
     end
   end

@@ -16,6 +16,8 @@ module TFSGraph
             collect_merges(branch)
             BranchAssociator.associate(branch.changesets)
           end
+
+          ChangesetTreeBuilder.set_branch_merges(new_changesets)
         end
 
         finalize
