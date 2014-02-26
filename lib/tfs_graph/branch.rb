@@ -14,7 +14,8 @@ module TFSGraph
       created: {key: "DateCreated", type: Time},
       type: {default: "Feature", type: Integer},
       archived: {default: false, type: String},
-      hidden: {default: false, type: String}
+      hidden: {default: false, type: String},
+      last_updated: {type: Time, default: Time.at(0).utc}
     }
 
     BRANCH_TYPES = [
@@ -59,6 +60,11 @@ module TFSGraph
 
     def named_type
       BRANCH_TYPES[type]
+    end
+
+    def updated!
+      @last_updated = Time.now.utc
+      save!
     end
 
     def hide!

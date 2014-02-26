@@ -4,7 +4,7 @@ module TFSGraph
   class Project < PersistableEntity
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: Time, default: nil}
+      last_updated: {type: Time, default: Time.at(0).utc}
     }
 
     act_as_entity
@@ -12,10 +12,6 @@ module TFSGraph
     def <=>(other)
       id <=> other.id
     end
-
-    # def last_updated
-    #   @last_updated || NeverUpdated
-    # end
 
     def updated!
       @last_updated = Time.now.utc

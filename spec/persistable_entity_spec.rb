@@ -83,7 +83,7 @@ describe TFSGraph::PersistableEntity do
 
       context "has properties" do
         Then { entity.name.should == "FooBarge" }
-        And { entity.last_updated.should be_nil }
+        And { entity.last_updated.should eq(Time.at(0).utc) }
       end
     end
   end
