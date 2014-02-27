@@ -1,18 +1,22 @@
-require 'tfs_graph/tfs_client'
+require 'tfs_graph/abstract_store'
+
 require 'tfs_graph/project/project_normalizer'
+require 'tfs_graph/abstract_store'
 
 module TFSGraph
-  class ProjectStore
-    extend TFSClient
-
+  class ProjectStore < AbstractStore
     class << self
-      def cache
-        projects = tfs.projects.run
-        normalized = ProjectNormalizer.normalize_many projects
+      def cache(project)
+        RepositoryRegistry.project_repository.create project
+      end
 
-        normalized.map do |project_attrs|
-          RepositoryRegistry.project_repository.create project_attrs
-        end
+      private
+      def root_query
+        tfs.projects
+      end
+
+      def normalize(projects)
+        ProjectNormalizer.normalize_many projects
       end
     end
   end

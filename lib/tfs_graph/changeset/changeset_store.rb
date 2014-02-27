@@ -1,61 +1,42 @@
-require 'tfs_graph/tfs_client'
-require 'tfs_graph/store_helpers'
+require 'tfs_graph/abstract_store'
 
 require 'tfs_graph/changeset/changeset_normalizer'
 require 'tfs_graph/changeset'
+
 # Wraps domain knowledge of changeset TFS access
 
 module TFSGraph
-  class ChangesetStore
-    include TFSClient
-    include StoreHelpers
-
+  class ChangesetStore < AbstractStore
     LIMIT = 10000
 
     def initialize(branch)
       @branch = branch
     end
 
-    def cache_all
-      persist all
+    def fetch_since_last_update
+      fetch_since_date(@branch.last_updated.iso8601)
     end
 
-    def cache_since_last_update
-      persist since_last_update
+    def fetch_since_date(date)
+      root_query.where("CreationDate gt DateTime'#{date}'").run
     end
 
-    def cache_since_date(start)
-      persist since_date(start)
-    end
+    def cache(attrs)
+      changeset = RepositoryRegistry.changeset_repository.build attrs
 
-    def all
-      normalize root_query.run
-    end
+      # add_changeset action runs save! on changeset
+      @branch.add_changeset changeset
 
-    def since_date(date)
-      normalize root_query.where("CreationDate gt DateTime'#{date}'").run
-    end
-
-    def since_last_update
-      since_date(last_updated_on.iso8601)
+      changeset
     end
 
     private
     def root_query
-      tfs.branches(@branch.path).changesets.limit(LIMIT)
+      tfs.branches(@branch.path).changesets.order_by("Id desc").limit(LIMIT)
     end
 
     def normalize(changesets)
       ChangesetNormalizer.normalize_many changesets, @branch.path
-    end
-
-    def persist(changesets)
-      changesets.map do |attrs|
-        changeset = RepositoryRegistry.changeset_repository.build attrs
-        @branch.add_changeset changeset
-
-        changeset
-      end.compact
     end
   end
 end

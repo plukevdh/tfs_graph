@@ -1,54 +1,40 @@
-require 'tfs_graph/tfs_client'
-require 'tfs_graph/tfs_helpers'
-require 'tfs_graph/store_helpers'
+require 'tfs_graph/abstract_store'
 
 require 'tfs_graph/branch/branch_normalizer'
 require 'tfs_graph/branch'
 
 module TFSGraph
-  class BranchStore
-    include TFSClient
-    include TFSHelpers
-    include StoreHelpers
-
+  class BranchStore < AbstractStore
     LIMIT = 1000
 
     def initialize(project)
       @project = project
     end
 
-    def cache_all
-      persist(all)
+    def fetch_since_last_update
+      fetch_since_date(@project.last_updated.iso8601)
     end
 
-    def cache_since_last_update
-      persist since_last_update
+    def fetch_since_date(date)
+      normalize root_query.where("CreationDate gt DateTime'#{date}'").run
     end
 
-    def all
-      normalize root_query.run
-    end
+    def cache(attrs)
+      branch = RepositoryRegistry.branch_repository.build attrs
 
-    def since_last_update
-      normalize root_query.where("DateCreated gt DateTime'#{last_updated_on.iso8601}'").run
+      # add_branch action runs save! on branch
+      @project.add_branch(branch)
+
+      branch
     end
 
     private
     def root_query
-      tfs.projects(@project.name).branches.limit(LIMIT)
+      tfs.projects(@project.name).branches.order_by('DateCreated desc').limit(LIMIT)
     end
 
     def normalize(branches)
       BranchNormalizer.normalize_many branches
-    end
-
-    def persist(branches)
-      branches.map do |branch_attrs|
-        branch = RepositoryRegistry.branch_repository.build branch_attrs
-        @project.add_branch(branch)
-
-        branch
-      end
     end
   end
 end

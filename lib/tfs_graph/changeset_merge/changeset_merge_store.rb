@@ -1,11 +1,10 @@
-require 'tfs_graph/tfs_client'
+require 'tfs_graph/abstract_store'
+
 require 'tfs_graph/changeset_merge/changeset_merge_normalizer'
 require 'tfs_graph/changeset_merge'
 
 module TFSGraph
-  class ChangesetMergeStore
-    include TFSClient
-
+  class ChangesetMergeStore < AbstractStore
     LIMIT = 10000
 
     def initialize(branch)
@@ -13,12 +12,16 @@ module TFSGraph
     end
 
     def cache
-      merges = tfs.branches(@branch.path).changesetmerges.limit(LIMIT).run
-      normalized = ChangesetMergeNormalizer.normalize_many merges, @branch
+      ChangesetMerge.create(attrs)
+    end
 
-      normalized.map do |attrs|
-        ChangesetMerge.create(attrs)
-      end.compact
+    private
+    def root_query
+      tfs.branches(@branch.path).changesetmerges.limit(LIMIT)
+    end
+
+    def normalize(merges)
+      ChangesetMergeNormalizer.normalize_many merges, @branch
     end
   end
 end
