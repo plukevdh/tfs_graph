@@ -53,7 +53,7 @@ module TFSGraph
       attributes = HashWithIndifferentAccess.new db_object.attributes
 
       obj = build attributes
-      obj.persist get_id(db_object)
+      obj.persist get_id(db_object), db_object
     end
 
     def create(args)
