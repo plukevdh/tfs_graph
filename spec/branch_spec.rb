@@ -39,6 +39,7 @@ describe TFSGraph::Branch do
       path: "$/Branch-My-Cool-Feature"})
     }
     Then { branch.should_not be_archived }
+    And { branch.should be_active }
     And { branch.should be_feature }
     And { branch.named_type.should == :feature }
   end
@@ -52,12 +53,14 @@ describe TFSGraph::Branch do
 
     context "is not initially set" do
       Then { branch.should_not be_hidden }
+      And { branch.should be_active }
     end
 
     context "can be set" do
       When { repo.should_receive(:save).with(branch) }
       When { branch.hide! }
       Then { branch.should be_hidden }
+      And { branch.should_not be_active }
     end
   end
 
@@ -70,12 +73,14 @@ describe TFSGraph::Branch do
 
     context "is not initially set" do
       Then { branch.should_not be_archived }
+      And { branch.should be_active }
     end
 
     context "can be set" do
       When { repo.should_receive(:save).with(branch) }
       When { branch.archive! }
       Then { branch.should be_archived }
+      And { branch.should_not be_active }
     end
   end
 end

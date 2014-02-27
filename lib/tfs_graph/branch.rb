@@ -58,6 +58,10 @@ module TFSGraph
       hidden.to_s == "true"
     end
 
+    def active?
+      !hidden? && !archived?
+    end
+
     def named_type
       BRANCH_TYPES[type]
     end
