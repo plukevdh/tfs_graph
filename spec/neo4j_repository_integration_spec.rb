@@ -304,12 +304,12 @@ describe "Neo4j repo integration" do
 
       context "can find the #{type}s" do
         When(:results) { foo.send "#{type}s" }
-        Then { results.size.should eq(2) }
+        Then { results.size.should eq(1) }
       end
 
       context "can find the hidden #{type}s" do
         When(:results) { foo.send "#{type}s_with_hidden" }
-        Then { results.size.should eq(3) }
+        Then { results.size.should eq(2) }
       end
 
       context "can find the archived #{type}s" do
