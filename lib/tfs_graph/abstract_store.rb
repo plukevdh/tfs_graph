@@ -8,18 +8,16 @@ module TFSGraph
     include TFSHelpers
     include StoreHelpers
 
-    class << self
-      def fetch_and_cache
-        cache_all fetch_all
-      end
+    def fetch_and_cache
+      cache_all fetch_all
+    end
 
-      def fetch_all
-        normalize root_query.run
-      end
+    def fetch_all
+      normalize root_query.run
+    end
 
-      def cache_all(attr_set)
-        attr_set.map {|attrs| cache(attrs) }
-      end
+    def cache_all(attr_set)
+      attr_set.map {|attrs| cache(attrs) }
     end
   end
 end

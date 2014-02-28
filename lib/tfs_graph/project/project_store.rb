@@ -5,19 +5,17 @@ require 'tfs_graph/abstract_store'
 
 module TFSGraph
   class ProjectStore < AbstractStore
-    class << self
-      def cache(project)
-        RepositoryRegistry.project_repository.create project
-      end
+    def cache(project)
+      RepositoryRegistry.project_repository.create project
+    end
 
-      private
-      def root_query
-        tfs.projects
-      end
+    private
+    def root_query
+      tfs.projects
+    end
 
-      def normalize(projects)
-        ProjectNormalizer.normalize_many projects
-      end
+    def normalize(projects)
+      ProjectNormalizer.normalize_many projects
     end
   end
 end
