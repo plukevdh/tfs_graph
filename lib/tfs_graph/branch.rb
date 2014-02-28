@@ -71,6 +71,10 @@ module TFSGraph
       save!
     end
 
+    def updated_since?(date)
+      @last_updated > date
+    end
+
     def hide!
       self.hidden = true
       save!

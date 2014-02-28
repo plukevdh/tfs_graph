@@ -18,6 +18,40 @@ describe TFSGraph::Branch do
     And { branch.should_not be_branch }
   end
 
+  context "updated state" do
+    When(:branch) { TFSGraph::Branch.new(repo, {
+      original_path: "$/Archived/Branch-A",
+      root: "",
+      path: "$/Branch-A",
+      name: "Branch-A"})
+    }
+
+    context "is updated" do
+      Given { repo.should_receive(:save).with(branch) }
+      When { branch.updated! }
+
+      context "can be set" do
+        When(:time) { branch.last_updated }
+        Then { expect(time).to be > Time.at(0).utc }
+      end
+
+      context "is updated" do
+        When(:updated) { branch.updated_since? 1.week.ago }
+        Then { updated.should be_true }
+      end
+
+      context "can compare with future" do
+        When(:updated) { branch.updated_since? 1.week.from_now }
+        Then { updated.should be_false }
+      end
+    end
+
+    context "is not updated" do
+      When(:updated) { branch.updated_since? 1.week.ago }
+      Then { updated.should be_false }
+    end
+  end
+
   context "estimates release from name" do
     When(:branch) { TFSGraph::Branch.new(repo, {
       original_path: "$/Branch-R44-1234",
