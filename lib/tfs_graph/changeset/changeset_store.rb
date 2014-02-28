@@ -32,7 +32,7 @@ module TFSGraph
 
     private
     def root_query
-      tfs.branches(@branch.path).changesets.order_by("Id desc").limit(LIMIT)
+      tfs.branches(@branch.path).changesets.order_by("Id asc").limit(LIMIT)
     end
 
     def normalize(changesets)
