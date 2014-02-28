@@ -19,6 +19,10 @@ module TFSGraph
         @changeset_store.cache_all new_changesets
 
         all_changesets = @branch.changesets
+
+        # skip rebuilding tree or marking as updated if no new were found
+        return all_changesets if new_changesets.empty?
+
         ChangesetTreeBuilder.to_tree(@branch, all_changesets)
 
         @branch.updated!
