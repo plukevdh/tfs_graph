@@ -59,6 +59,10 @@ module TFSGraph
         end
 
         private
+        def fetch_existing_record(obj)
+          find_by_name(obj.name).db_object
+        end
+
         def root_branch_query(include_archived=true, include_hidden=true)
           "MATCH (p:project {name: {project}})-[:branches]->(b:branch {archived: '#{include_archived}', hidden: '#{include_hidden}'}) WHERE b.original_path = {path} OR b.root = {path}"
         end

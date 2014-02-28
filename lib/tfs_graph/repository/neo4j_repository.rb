@@ -65,7 +65,12 @@ module TFSGraph
 
       # create the DB object
       def persist(object)
-        Neo4j::Node.create(object.to_hash, object.base_class_name.downcase)
+        begin
+          Neo4j::Node.create(object.to_hash, object.base_class_name.downcase)
+        rescue Neo4j::Server::CypherResponse::ResponseError => e
+          # assume all errors come from constraint errors... probably a bad idea
+          fetch_existing_record(object)
+        end
       end
 
       # update the DB object
