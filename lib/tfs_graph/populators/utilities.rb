@@ -8,7 +8,6 @@ module TFSGraph
       end
 
       def finalize
-        BranchArchiveHandler.hide_all_archives
         mark_as_updated
       end
 
