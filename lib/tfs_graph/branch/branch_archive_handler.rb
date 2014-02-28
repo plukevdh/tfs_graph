@@ -11,12 +11,16 @@ module TFSGraph
       end
 
       def hide_moved_archives_for_project(project)
-        archived = project.branches.group_by(&:path).select {|_, group| group.size > 1 }
-        archived.each do |path, group|
-          group.select(&:archived?).each(&:hide!)
-          group.reject(&:archived?).each(&:archive!)
+        project.branches.group_by(&:path).map do |path, group|
+          next unless group.size > 1
+
+          group.each do |branch|
+            branch.hide! if branch.archived?
+            branch.archive! unless branch.archived?
+          end
+
+          group
         end
-        archived
       end
     end
   end
