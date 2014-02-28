@@ -12,21 +12,12 @@ module TFSGraph
         mark_as_updated
       end
 
-      def collect_projects
-        ProjectStore.cache
+      def find_project(name)
+        TFSGraph::RepositoryRegistry.project_repository.find_by_name name
       end
 
-      def collect_branches(project)
-        BranchStore.new(project).cache_all
-      end
-
-      def collect_changesets(branch, method=:cache_all, *args)
-        changesets = ChangesetStore.new(branch).send(method, *args)
-        ChangesetTreeBuilder.to_tree(branch, changesets).compact
-      end
-
-      def collect_merges(branch)
-        ChangesetMergeStore.new(branch).cache
+      def find_branch(path)
+        TFSGraph::RepositoryRegistry.branch_repository.find_by_path path
       end
     end
   end
