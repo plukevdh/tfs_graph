@@ -60,7 +60,7 @@ module TFSGraph
       end
 
       private
-      # persist and update both expose the DB object from Redis/Related
+      # persist and update both expose the DB object from Neo4j
       # make methods private so we have to use save to persist
 
       # create the DB object
