@@ -24,6 +24,7 @@ module TFSGraph
           project.updated!
         end
 
+        BranchArchiveHandler.hide_moved_archives_for_project(projects)
         finalize
       end
     end
