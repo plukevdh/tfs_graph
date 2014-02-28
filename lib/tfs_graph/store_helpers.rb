@@ -17,7 +17,7 @@ module TFSGraph
 
     def last_updated_on
       date = redis.get(UPDATED_KEY)
-      return Time.now unless date
+      return Time.at(0).localtime unless date
 
       Time.parse(date).localtime
     end
