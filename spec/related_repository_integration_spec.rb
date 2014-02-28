@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'active_support/core_ext/numeric/time'
 
 require 'tfs_graph/repository/related_repository'
 require 'tfs_graph/server_registry'

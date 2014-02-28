@@ -10,6 +10,10 @@ require 'vcr'
 require 'pry'
 require 'timecop'
 
+require "active_support/core_ext/object"
+require 'active_support/core_ext/numeric/time'
+require 'active_support/core_ext/date/calculations'
+
 VCR.configure do |c|
   c.cassette_library_dir = 'spec/fixtures/vcr_cassettes'
   c.hook_into :webmock

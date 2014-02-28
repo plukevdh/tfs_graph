@@ -1,10 +1,6 @@
 require 'spec_helper'
 require 'neo4j-core'
 
-require "active_support/core_ext/object"
-require 'active_support/core_ext/numeric/time'
-require 'active_support/core_ext/date/calculations'
-
 require 'tfs_graph/repository/neo4j_repository'
 require 'tfs_graph/server_registry'
 require 'tfs_graph/repository_registry'
