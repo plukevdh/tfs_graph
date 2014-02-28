@@ -18,7 +18,7 @@ module TFSGraph
     end
 
     def fetch_since_date(date)
-      root_query.where("CreationDate gt DateTime'#{date}'").run
+      normalize root_query.where("CreationDate gt DateTime'#{date}'").run
     end
 
     def cache(attrs)
