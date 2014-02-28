@@ -6,11 +6,19 @@ module TFSGraph
       def populate
         clean
 
-        collect_projects.map do |project|
-          branches = collect_branches(project)
-          changesets = branches.map {|branch| collect_changesets(branch) }
+        projects = ProjectStore.fetch_and_cache
 
-          branches.each {|branch| collect_merges(branch) }
+        projects.each do |project|
+          branches = BranchStore.new(project).fetch_and_cache
+
+          changesets = branches.select(&:active?).map do |branch|
+            changesets = ChangesetStore.new(branch).fetch_and_cache
+            ChangesetTreeBuilder.to_tree(branch, changesets)
+
+            branch.updated!
+            changesets
+          end
+
           ChangesetTreeBuilder.set_branch_merges(changesets)
 
           project.updated!

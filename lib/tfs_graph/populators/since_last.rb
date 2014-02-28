@@ -4,20 +4,31 @@ module TFSGraph
       include Utilities
 
       def populate
-        TFSGraph::RepositoryRegistry.project_repository.all.map do |project|
-          new_changesets = project.active_branches.map {|branch| collect_changesets branch, :cache_since_last_update}
-          new_branches = BranchStore.new(project).cache_since_last_update
+        projects = ProjectStore.new.fetch_all
+        existing_projects = RepositoryRegistry.project_repository.all
 
-          new_changesets.concat new_branches.map {|branch| collect_changesets branch }
+        names = existing_projects.map(&:name)
+        new_project_data = projects.reject {|project| names.include? project[:name]  }
+        new_projects = ProjectStore.cache_all(new_project_data)
 
-          # recache and reassociate all merges for all branches.
-          # should not lead to dupes thanks to Related
-          new_branches.concat(project.branches).each do |branch|
-            collect_merges(branch)
-            BranchAssociator.associate(branch.changesets)
+        existing_projects.concat(new_projects).each do |project|
+          ForProject.new(project).populate
+          branches = BranchStore.new(project).fetch_and_cache
+
+          changesets = branches.select(&:active?).map do |branch|
+            changesets = ChangesetStore.new(branch).fetch_since_date @since
+            ChangesetTreeBuilder.to_tree(branch, changesets)
+
+            branch.updated!
+            changesets
           end
 
-          ChangesetTreeBuilder.set_branch_merges(new_changesets)
+          # setup merges
+          branches.each {|branch| ChangesetMergeStore.new(branch).fetch_and_cache }
+          ChangesetTreeBuilder.set_branch_merges(changesets)
+
+          BranchArchiveHandler.hide_moved_archives_for_project(@project)
+          project.updated!
         end
 
         finalize

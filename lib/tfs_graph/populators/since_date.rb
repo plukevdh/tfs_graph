@@ -7,18 +7,31 @@ module TFSGraph
         @since = since
       end
 
+      # could use the ForProject populator, except that we allow
+      # specification of a date rather than using last updated.
+      # also dumps all existing data
       def populate
         clean
 
-        collect_projects.map do |project|
-          branches = collect_branches(project)
-          new_changesets = branches.map do |branch|
-            collect_changesets(branch, :cache_since_date, @since)
+        projects = ProjectStore.fetch_and_cache
+
+        projects.each do |project|
+          ForProject.new(project).populate
+          branches = BranchStore.new(project).fetch_and_cache
+
+          changesets = branches.select(&:active?).map do |branch|
+            changesets = ChangesetStore.new(branch).fetch_since_date @since
+            ChangesetTreeBuilder.to_tree(branch, changesets)
+
+            branch.updated!
+            changesets
           end
 
-          branches.each {|branch| collect_merges(branch) }
+          # setup merges
+          branches.each {|branch| ChangesetMergeStore.new(branch).fetch_and_cache }
+          ChangesetTreeBuilder.set_branch_merges(changesets)
 
-          ChangesetTreeBuilder.set_branch_merges(new_changesets)
+          BranchArchiveHandler.hide_moved_archives_for_project(@project)
           project.updated!
         end
 
