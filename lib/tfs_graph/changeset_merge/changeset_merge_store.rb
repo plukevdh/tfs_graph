@@ -11,7 +11,7 @@ module TFSGraph
       @branch = branch
     end
 
-    def cache
+    def cache(attrs)
       ChangesetMerge.create(attrs)
     end
 
