@@ -23,7 +23,7 @@ module TFSGraph
         # skip rebuilding tree or marking as updated if no new were found
         return all_changesets if new_changesets.empty?
 
-        ChangesetTreeBuilder.to_tree(@branch, all_changesets)
+        ChangesetTreeBuilder.to_tree(@branch, all_changesets.sort)
 
         @branch.updated!
         all_changesets
