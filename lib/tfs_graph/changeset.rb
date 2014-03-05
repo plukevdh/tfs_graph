@@ -36,6 +36,14 @@ module TFSGraph
       @id.to_i unless @id.nil?
     end
 
+    def merge?
+      !base? && @merge_parent != 0
+    end
+
+    def base?
+      @parent == 0 || @parent == @merge_parent
+    end
+
     def created
       return nil unless @created
       return @created unless @created.is_a? String
