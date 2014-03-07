@@ -15,18 +15,20 @@ module TFSGraph
       end
 
       def populate
-        new_changesets = @changeset_store.fetch_since_last_update
+        populate_since(@branch.last_updated.iso8601)
+      end
+
+      def populate_since(time)
+        new_changesets = @changeset_store.fetch_since_date(time)
         @changeset_store.cache_all new_changesets
 
-        all_changesets = @branch.changesets
-
         # skip rebuilding tree or marking as updated if no new were found
-        return all_changesets if new_changesets.empty?
+        return new_changesets if new_changesets.empty?
 
-        ChangesetTreeBuilder.to_tree(@branch, all_changesets.sort)
+        ChangesetTreeBuilder.to_tree(@branch, @branch.changesets.sort)
 
         @branch.updated!
-        all_changesets
+        new_changesets
       end
     end
   end

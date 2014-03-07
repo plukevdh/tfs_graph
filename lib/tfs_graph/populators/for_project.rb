@@ -20,6 +20,7 @@ module TFSGraph
 
         changesets = active_branches.map do |branch|
           ForBranch.new(@project, branch).populate
+          branch.changesets
         end
 
         # Add merges
