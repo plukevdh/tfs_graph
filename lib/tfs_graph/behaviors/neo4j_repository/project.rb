@@ -28,6 +28,13 @@ module TFSGraph
           rebuild project
         end
 
+        def root_branches(project)
+          roots = session.query "MATCH (p:project {name: {project}})-[:branches]->(b:branch {hidden: 'false', archived: 'false'}) where not has(b.root) RETURN b AS `branch`, ID(b) AS `neo_id`",
+            project: project.name
+
+          rebuild_for_type RepositoryRegistry.branch_repository, roots, :branch
+        end
+
         def branches_for_root(project, branch)
           branches = session.query "#{ROOT_BRANCH_QUERY} RETURN b as `branch`, ID(b) as `neo_id`",
             project: project.name,

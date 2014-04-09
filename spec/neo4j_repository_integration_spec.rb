@@ -130,6 +130,12 @@ describe "Neo4j repo integration" do
           When(:all) { foo.branches_with_hidden }
           Then { all.size.should eq(5) }
         end
+
+        context "can get root branches" do
+          When(:roots) { project_repo.root_branches(foo) }
+          Then { roots.size.should eq(3) }
+          And { roots.all? {|r| r.master? }.should be_true }
+        end
       end
 
       context "changeset lookups" do
