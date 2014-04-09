@@ -28,7 +28,7 @@ module TFSGraph
             project: project.name,
             path: branch.path
 
-          rebuild_from_query RepositoryRegistry.branch_repository, branches, :branch
+          rebuild_for_type RepositoryRegistry.branch_repository, branches, :branch
         end
 
         def active_branches_for_root(project, branch)
@@ -36,7 +36,7 @@ module TFSGraph
             project: project.name,
             path: branch.path
 
-          rebuild_from_query RepositoryRegistry.branch_repository, branches, :branch
+          rebuild_for_type RepositoryRegistry.branch_repository, branches, :branch
         end
 
         def changesets_for_root(project, branch)
@@ -44,25 +44,25 @@ module TFSGraph
             project: project.name,
             path: branch.path
 
-          rebuild_from_query RepositoryRegistry.changeset_repository, changesets, :changeset
+          rebuild_for_type RepositoryRegistry.changeset_repository, changesets, :changeset
         end
 
         def activity(project)
           changesets = session.query "#{ACTIVITY_QUERY} RETURN c as `changeset`, ID(b) as `neo_id`",
             name: project.name
 
-          rebuild_from_query RepositoryRegistry.changeset_repository, changesets, :changeset
+          rebuild_for_type RepositoryRegistry.changeset_repository, changesets, :changeset
         end
 
         def activity_by_date(project, time)
           changesets = session.query "#{ACTIVITY_QUERY} AND c.created >= {time} RETURN c as `changeset`, ID(b) as `neo_id`",
             { name: project.name, time: time.utc.to_i }
 
-          rebuild_from_query RepositoryRegistry.changeset_repository, changesets, :changeset
+          rebuild_for_type RepositoryRegistry.changeset_repository, changesets, :changeset
         end
 
         private
-        def rebuild_from_query(repo, data, key)
+        def rebuild_for_type(repo, data, key)
           data.each_slice(2).map do |data,id|
             repo.rebuild_from_query data[key]['data'], id[:neo_id]
           end
