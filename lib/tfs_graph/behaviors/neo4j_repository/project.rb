@@ -16,6 +16,11 @@ module TFSGraph
           get_nodes(root, :outgoing, :projects, TFSGraph::Project)
         end
 
+        def active
+          projects = session.query "MATCH (p:project {hidden: 'false'}) RETURN p as `project`, ID(p) as `neo_id`"
+          rebuild_for_type self, projects, :project
+        end
+
         def find_by_name(name)
           project = Neo4j::Label.query(:project, conditions: {name: name}).first
           raise TFSGraph::Repository::NotFound, "No project found for #{name}" if project.nil?

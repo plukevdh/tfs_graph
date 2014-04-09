@@ -27,13 +27,19 @@ describe "Neo4j repo integration" do
   }}
   Given(:project_repo) { register.project_repository }
   Given { 3.times {|i| project_repo.create(name: "TestProject_#{i}") }}
+  Given { 2.times {|i| project_repo.create(name: "TestProject_#{i+7}", hidden: true) }}
   Given(:foo) { project_repo.create(name: "TestProject_Foo") }
 
   context "project lookups" do
     context "can lookup all projects" do
       When(:all) { project_repo.all }
-      Then { all.count.should == 3 }
+      Then { all.count.should == 5 }
       And { all.all? {|p| p.is_a? TFSGraph::Project }.should be_true }
+    end
+
+    context "can lookup active projects only" do
+      When(:all) { project_repo.active }
+      Then { all.count.should == 3 }
     end
 
     context "can lookup by id" do

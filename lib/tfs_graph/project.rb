@@ -4,7 +4,8 @@ module TFSGraph
   class Project < PersistableEntity
     SCHEMA = {
       name: {key: "Name"},
-      last_updated: {type: Time, default: Time.at(0).utc}
+      last_updated: {type: Time, default: Time.at(0).utc},
+      hidden: {default: false, type: String}
     }
 
     act_as_entity
@@ -16,6 +17,15 @@ module TFSGraph
     def updated!
       @last_updated = Time.now.utc
       save!
+    end
+
+    # force string
+    def hidden
+      @hidden.to_s
+    end
+
+    def hidden?
+      @hidden.to_s == "true"
     end
 
     def add_branch(branch)

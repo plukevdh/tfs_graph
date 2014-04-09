@@ -17,20 +17,26 @@ describe "Related repo integration" do
     TFSGraph::ServerRegistry.register {|r| r.redis url: "redis://localhost:6379", namespace: "test" }
   end
 
-  before(:each) do
-    TFSGraph::ServerRegistry.server.flush
+  after(:each) do
+    TFSGraph::ServerRegistry.server.drop_all
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r| r.type TFSGraph::Repository::RelatedRepository }}
   Given(:project_repo) { register.project_repository }
   Given { 3.times {|i| project_repo.create(name: "TestProject_#{i}") }}
+  Given { 2.times {|i| project_repo.create(name: "TestProject_#{i+7}", hidden: true) }}
   Given(:foo) { project_repo.create(name: "TestProject_Foo") }
 
   context "project lookups" do
     context "can lookup all projects" do
       When(:all) { project_repo.all }
-      Then { all.count.should == 3 }
+      Then { all.count.should == 5 }
       And { all.all? {|p| p.is_a? TFSGraph::Project }.should be_true }
+    end
+
+    context "can lookup active projects only" do
+      When(:all) { project_repo.active }
+      Then { all.count.should == 3 }
     end
 
     context "can lookup by id" do
@@ -70,7 +76,7 @@ describe "Related repo integration" do
           project: "TestProject_Foo"
         )
       }
-      When(:project) { branch_repo.project_for_branch branch}
+      When(:project) { branch_repo.project_for_branch branch }
       Then { project.should eq(foo) }
     end
 

@@ -13,6 +13,10 @@ module TFSGraph
           get_nodes(root, :outgoing, :projects, TFSGraph::Project)
         end
 
+        def active
+          all.reject &:hidden?
+        end
+
         def find_by_name(name)
           project = all.detect {|p| p.name == name }
           raise TFSGraph::Repository::NotFound, "No project found for #{name}" if project.nil?
