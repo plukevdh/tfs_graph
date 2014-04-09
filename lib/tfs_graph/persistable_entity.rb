@@ -27,6 +27,13 @@ module TFSGraph
       @repo.save(self)
     end
 
+    def delete!
+      @repo.delete(self)
+
+      @db_object = nil
+      @id = nil
+    end
+
     def persist(id, db_object)
       @id ||= id
       @db_object = db_object

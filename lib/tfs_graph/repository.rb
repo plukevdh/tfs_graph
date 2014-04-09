@@ -45,6 +45,11 @@ module TFSGraph
       object.persist get_id(db_object), db_object
     end
 
+    def delete(obj)
+      obj.db_object = nil
+      obj.id = nil
+    end
+
     def build(args={})
       @type.new self, args
     end

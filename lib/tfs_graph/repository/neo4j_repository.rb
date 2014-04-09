@@ -23,6 +23,12 @@ module TFSGraph
       def flush
         @root = nil
       end
+
+      def delete(obj)
+        obj.db_object.del
+        super
+      end
+
       def drop_all
         flush
         session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")

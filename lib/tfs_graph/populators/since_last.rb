@@ -33,7 +33,6 @@ module TFSGraph
 
         finalize
       end
-
     end
   end
 end

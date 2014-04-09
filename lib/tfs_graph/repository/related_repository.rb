@@ -36,6 +36,11 @@ module TFSGraph
         end
       end
 
+      def delete(obj)
+        obj.db_object.destroy
+        super
+      end
+
       def relate(relationship, parent, child)
         Related::Relationship.create relationship, parent, child
       end
