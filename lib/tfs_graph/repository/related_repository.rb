@@ -26,6 +26,11 @@ module TFSGraph
       end
 
       def flush
+        # noop
+      end
+
+      def drop_all
+        flush
         session.keys("*").each do |k|
           session.del k
         end

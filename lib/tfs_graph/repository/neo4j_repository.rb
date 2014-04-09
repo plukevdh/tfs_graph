@@ -22,6 +22,9 @@ module TFSGraph
 
       def flush
         @root = nil
+      end
+      def drop_all
+        flush
         session.query("MATCH (n) OPTIONAL MATCH (n)-[r]-() DELETE n,r")
       end
 

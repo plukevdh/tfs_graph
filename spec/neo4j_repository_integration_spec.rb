@@ -19,7 +19,7 @@ describe "Neo4j repo integration" do
   end
 
   after :each do
-    TFSGraph::ServerRegistry.server.flush
+    TFSGraph::ServerRegistry.server.drop_all
   end
 
   Given(:register) { TFSGraph::RepositoryRegistry.register {|r|
