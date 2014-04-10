@@ -35,6 +35,10 @@ module TFSGraph
       @repo.relate(:branches, db_object, branch.db_object)
     end
 
+    def root_branches
+      @repo.root_branches(self)
+    end
+
     def all_activity
       @repo.activity(self)
     end
