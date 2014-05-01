@@ -19,6 +19,11 @@ module TFSGraph
       save!
     end
 
+    def hide!
+      self.hidden = true
+      save!
+    end
+
     # force string
     def hidden
       @hidden.to_s
